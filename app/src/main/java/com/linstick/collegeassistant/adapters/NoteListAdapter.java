@@ -62,18 +62,24 @@ public class NoteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             viewHolder.publishTimeTv.setText(TimeFactoryUtil.timeToLeftTime(note.getPublishTime()));
             viewHolder.belongModuleTv.setText(note.getBelongModule().getName());
             viewHolder.noteTitleTv.setText(note.getTitle());
-            viewHolder.browseCountTv.setText(note.getBrowseCount() + "");
+            viewHolder.collectCountTv.setText(note.getCollectCount() + "");
             viewHolder.commentCountTv.setText(note.getCommentCount() + "");
             viewHolder.likeCountTv.setText(note.getLikeCount() + "");
-            viewHolder.likeIv.setImageResource(note.isLike() ? R.drawable.ic_like_red : R.drawable.ic_like_gray);
+            viewHolder.likeIv.setImageResource(note.isLiked() ? R.drawable.ic_like_red : R.drawable.ic_like_gray);
 
             if (mListener != null) {
+                viewHolder.collectCountLayout.setOnClickListener(this);
+                viewHolder.collectCountLayout.setTag(position);
                 viewHolder.commentCountLayout.setOnClickListener(this);
                 viewHolder.commentCountLayout.setTag(position);
                 viewHolder.likeCountLayout.setOnClickListener(this);
                 viewHolder.likeCountLayout.setTag(position);
                 viewHolder.itemLayout.setOnClickListener(this);
                 viewHolder.itemLayout.setTag(position);
+                viewHolder.userIconIv.setOnClickListener(this);
+                viewHolder.userIconIv.setTag(position);
+                viewHolder.nicknameTv.setOnClickListener(this);
+                viewHolder.nicknameTv.setTag(position);
             }
         } else {
             FooterViewHolder viewHolder = (FooterViewHolder) holder;
@@ -105,8 +111,15 @@ public class NoteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onClick(View view) {
         int position = (int) view.getTag();
         switch (view.getId()) {
+            case R.id.iv_user_icon:
+            case R.id.tv_nickname:
+                mListener.onUserInfoClick(position);
+                break;
             case R.id.ll_item_layout:
                 mListener.onNoteItemClick(position);
+                break;
+            case R.id.ll_collect_count_layout:
+                mListener.onChangeCollectClick(position);
                 break;
             case R.id.ll_comment_count_layout:
                 mListener.onAddCommentClick(position);
@@ -131,16 +144,16 @@ public class NoteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         TextView noteTitleTv;
         @BindView(R.id.tv_note_content)
         TextView noteContentTv;
-        @BindView(R.id.tv_browse_count)
-        TextView browseCountTv;
+        @BindView(R.id.tv_collect_count)
+        TextView collectCountTv;
         @BindView(R.id.tv_comment_count)
         TextView commentCountTv;
         @BindView(R.id.tv_like_count)
         TextView likeCountTv;
         @BindView(R.id.iv_like)
         ImageView likeIv;
-        @BindView(R.id.ll_browse_count_layout)
-        LinearLayout browseCountLayout;
+        @BindView(R.id.ll_collect_count_layout)
+        LinearLayout collectCountLayout;
         @BindView(R.id.ll_comment_count_layout)
         LinearLayout commentCountLayout;
         @BindView(R.id.ll_like_count_layout)

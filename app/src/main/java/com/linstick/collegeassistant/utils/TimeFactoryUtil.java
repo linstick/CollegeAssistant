@@ -1,5 +1,6 @@
 package com.linstick.collegeassistant.utils;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class TimeFactoryUtil {
@@ -34,5 +35,10 @@ public class TimeFactoryUtil {
         }
         minusValue /= 60; // 单位：时
         return minusValue + "小时前";
+    }
+
+    public static String dateFormat(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        return sdf.format(date);
     }
 }

@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.linstick.collegeassistant.R;
+import com.linstick.collegeassistant.activities.NoteDetailActivity;
+import com.linstick.collegeassistant.activities.UserInfoActivity;
 import com.linstick.collegeassistant.adapters.NoteListAdapter;
 import com.linstick.collegeassistant.adapters.OnNoteListPartialClickListener;
 import com.linstick.collegeassistant.base.BaseFragment;
@@ -107,9 +109,15 @@ public class AllNotesFragment extends BaseFragment implements OnNoteListPartialC
     }
 
     @Override
+    public void onUserInfoClick(int position) {
+        // 查看用户信息
+        UserInfoActivity.startAction(getContext(), mList.get(position).getPublisher());
+    }
+
+    @Override
     public void onAddCommentClick(int position) {
         // 跳转到评论页面
-        Toast.makeText(getActivity(), "评论" + position, Toast.LENGTH_SHORT).show();
+        NoteDetailActivity.startActionByAddComment(getContext(), mList.get(position));
     }
 
     @Override
@@ -121,7 +129,13 @@ public class AllNotesFragment extends BaseFragment implements OnNoteListPartialC
     @Override
     public void onNoteItemClick(int position) {
         // 跳转到帖子详情界面
-        Toast.makeText(getActivity(), "详情" + position, Toast.LENGTH_SHORT).show();
+        NoteDetailActivity.startAction(getContext(), mList.get(position));
+    }
+
+    @Override
+    public void onChangeCollectClick(int position) {
+        // 改变收藏
+        Toast.makeText(getActivity(), "收藏" + position, Toast.LENGTH_SHORT).show();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

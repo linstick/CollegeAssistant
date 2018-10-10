@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="10dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/iv_user_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/bg_setting_header" />
+
+    <TextView
+        android:id="@+id/tv_nickname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="6dp"
+        android:layout_toRightOf="@+id/iv_user_icon"
+        android:text="linstick"
+        android:textColor="#444444"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/tv_publish_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tv_nickname"
+        android:layout_below="@+id/tv_nickname"
+        android:text="2018-10-10 23:59"
+        android:textColor="#999999"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv_comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tv_nickname"
+        android:layout_below="@+id/iv_user_icon"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="2dp"
+        android:text="测试内容测试内容撒打发撒打发啊打发都是法师打发打发撒打发撒打发撒打发测试内容测试尼大厦法定待发送地方的飞洒日尔测试尼日尔阿斯顿发打的费撒打发阿斯顿发"
+        android:textColor="#777777"
+        android:textSize="15sp" />
+
+    <View
+        android:id="@+id/view_divide_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/tv_comment"
+        android:layout_marginTop="10dp"
+        android:background="#DDDDDD" />
+</RelativeLayout>

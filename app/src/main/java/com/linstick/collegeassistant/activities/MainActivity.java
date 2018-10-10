@@ -24,6 +24,7 @@ import com.linstick.collegeassistant.base.BaseFragment;
 import com.linstick.collegeassistant.fragments.AllNotesFragment;
 import com.linstick.collegeassistant.fragments.CampusTalkFragment;
 import com.linstick.collegeassistant.fragments.ClubNoteFragment;
+import com.linstick.collegeassistant.fragments.LectureNoteFragment;
 import com.linstick.collegeassistant.fragments.LifeNoteFragment;
 import com.linstick.collegeassistant.fragments.OtherNoteFragment;
 import com.linstick.collegeassistant.fragments.SportNoteFragment;
@@ -50,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements
 
     private List<BaseFragment> mFragmentList;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,13 +66,13 @@ public class MainActivity extends AppCompatActivity implements
         sideNavigationBar.setNavigationItemSelectedListener(this);
 
         initFragment();
-
     }
 
     private void initFragment() {
         mFragmentList = new ArrayList<>();
         mFragmentList.add(new AllNotesFragment());
         mFragmentList.add(new ClubNoteFragment());
+        mFragmentList.add(new LectureNoteFragment());
         mFragmentList.add(new CampusTalkFragment());
         mFragmentList.add(new SportNoteFragment());
         mFragmentList.add(new LifeNoteFragment());

@@ -1,8 +1,9 @@
 package com.linstick.collegeassistant.beans;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class User {
+public class User implements Serializable {
     private int id;
     private String nickName;
     private String realName;

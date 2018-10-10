@@ -45,7 +45,13 @@
 
         <activity
             android:name=".activities.NoteDetailActivity"
-            android:label="详情"></activity>
+            android:label="详情">
+        </activity>
+
+        <activity
+            android:name=".activities.UserInfoActivity"
+            android:label="用户信息">
+        </activity>
     </application>
 
 </manifest>
