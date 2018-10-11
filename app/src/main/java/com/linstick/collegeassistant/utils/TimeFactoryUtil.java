@@ -1,9 +1,12 @@
 package com.linstick.collegeassistant.utils;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class TimeFactoryUtil {
+
+    public final static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
     public static String timeToLeftTime(Date date) {
         Date currDate = new Date();
@@ -37,8 +40,24 @@ public class TimeFactoryUtil {
         return minusValue + "小时前";
     }
 
-    public static String dateFormat(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    public static String dateToStringFormat(Date date) {
         return sdf.format(date);
+    }
+
+    public static Date stringToDateFormat(String str) {
+        try {
+            return sdf.parse(str);
+        } catch (ParseException e) {
+            return null;
+        }
+    }
+
+    public static boolean isVaildStringToDate(String str) {
+        try {
+            sdf.parse(str);
+        } catch (ParseException e) {
+            return false;
+        }
+        return true;
     }
 }

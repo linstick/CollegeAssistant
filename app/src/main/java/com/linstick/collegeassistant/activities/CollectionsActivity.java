@@ -2,13 +2,9 @@ package com.linstick.collegeassistant.activities;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
-import android.widget.Toast;
 
-import com.linstick.collegeassistant.R;
-import com.linstick.collegeassistant.adapters.NoteListAdapter;
-import com.linstick.collegeassistant.adapters.listeners.OnNoteListPartialClickListener;
+import com.linstick.collegeassistant.adapters.CollectionListNoteAdapter;
+import com.linstick.collegeassistant.adapters.listeners.OnCollectionClickListener;
 import com.linstick.collegeassistant.base.BaseSwipeNoteActivity;
 import com.linstick.collegeassistant.beans.Note;
 import com.linstick.collegeassistant.callbacks.LoadDataCallBack;
@@ -16,20 +12,12 @@ import com.linstick.collegeassistant.callbacks.LoadDataCallBack;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-
-public class SearchActivity extends BaseSwipeNoteActivity implements OnNoteListPartialClickListener {
-
-
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-
+public class CollectionsActivity extends BaseSwipeNoteActivity implements OnCollectionClickListener {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.mList = new ArrayList<>();
-        NoteListAdapter mAdapter = new NoteListAdapter(mList);
-        mAdapter.setOnNoteListPartialClickListener(this);
-        mAdapter.setShowBelongModule(true);
+        CollectionListNoteAdapter mAdapter = new CollectionListNoteAdapter(mList);
+        mAdapter.setOnCollectionClickListener(this);
         super.mAdapter = mAdapter;
         super.onCreate(savedInstanceState);
     }
@@ -60,7 +48,6 @@ public class SearchActivity extends BaseSwipeNoteActivity implements OnNoteListP
                 }
             }
         }).start();
-
     }
 
     @Override
@@ -92,59 +79,13 @@ public class SearchActivity extends BaseSwipeNoteActivity implements OnNoteListP
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                SearchActivity.this.finish();
-                break;
-        }
-        return true;
+    public void onCollectionClick(int position) {
+        NoteDetailActivity.startAction(CollectionsActivity.this, mList.get(position));
     }
 
     @Override
-    public void onUserInfoClick(int position) {
-        // 查看用户信息
-        UserInfoActivity.startAction(SearchActivity.this, mList.get(position).getPublisher());
-    }
-
-    @Override
-    public void onAddCommentClick(int position) {
-        // 跳转到评论页面
-        NoteDetailActivity.startActionByAddComment(SearchActivity.this, mList.get(position));
-    }
-
-    @Override
-    public void onChangeLikeClick(int position) {
-        // 改变点赞
-        Note note = mList.get(position);
-        note.setLiked(!note.isLiked());
-        int likeCount = note.getLikeCount();
-        if (note.isLiked()) {
-            note.setLikeCount(likeCount + 1);
-        } else {
-            note.setLikeCount(likeCount - 1);
-        }
-        mAdapter.notifyItemChanged(position);
-    }
-
-    @Override
-    public void onNoteItemClick(int position) {
-        // 跳转到帖子详情界面
-        NoteDetailActivity.startAction(SearchActivity.this, mList.get(position));
-    }
-
-    @Override
-    public void onChangeCollectClick(int position) {
-        // 改变收藏
-        Note note = mList.get(position);
-        note.setCollected(!note.isCollected());
-        int collectCount = note.getCollectCount();
-        if (note.isCollected()) {
-            note.setCollectCount(collectCount + 1);
-            Toast.makeText(SearchActivity.this, "收藏成功", Toast.LENGTH_SHORT).show();
-        } else {
-            note.setCollectCount(collectCount - 1);
-        }
-        mAdapter.notifyItemChanged(position);
+    public void onCancelCollectClick(int position) {
+        mList.remove(position);
+        mAdapter.notifyDataSetChanged();
     }
 }

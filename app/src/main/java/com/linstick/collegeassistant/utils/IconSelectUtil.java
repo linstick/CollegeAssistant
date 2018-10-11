@@ -10,7 +10,7 @@ public class IconSelectUtil {
     public static Drawable selectLikeIcon(Context context, boolean isLike) {
         Drawable drawable;
         if (isLike) {
-            drawable = ContextCompat.getDrawable(context, R.drawable.ic_like_red);
+            drawable = ContextCompat.getDrawable(context, R.drawable.ic_like_orange);
         } else {
             drawable = ContextCompat.getDrawable(context, R.drawable.ic_like_gray);
         }

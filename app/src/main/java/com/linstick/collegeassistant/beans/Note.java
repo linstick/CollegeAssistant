@@ -161,4 +161,25 @@ public class Note implements Serializable {
     public void setCollected(boolean collected) {
         isCollected = collected;
     }
+
+    @Override
+    public String toString() {
+        return "Note{" +
+                "publisher=" + publisher +
+                ", belongModule=" + belongModule +
+                ", noteId=" + noteId +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", publishTime=" + publishTime +
+                ", startTime=" + startTime +
+                ", keepTime='" + keepTime + '\'' +
+                ", address='" + address + '\'' +
+                ", remarks='" + remarks + '\'' +
+                ", collectCount=" + collectCount +
+                ", commentCount=" + commentCount +
+                ", likeCount=" + likeCount +
+                ", isLiked=" + isLiked +
+                ", isCollected=" + isCollected +
+                '}';
+    }
 }

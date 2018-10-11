@@ -1,7 +1,9 @@
 package com.linstick.collegeassistant.activities;
 
+import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,23 +13,27 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.linstick.collegeassistant.App;
 import com.linstick.collegeassistant.R;
 import com.linstick.collegeassistant.adapters.ViewPagerAdapter;
-import com.linstick.collegeassistant.base.BaseFragment;
-import com.linstick.collegeassistant.fragments.AllNotesFragment;
-import com.linstick.collegeassistant.fragments.CampusTalkFragment;
-import com.linstick.collegeassistant.fragments.ClubNoteFragment;
-import com.linstick.collegeassistant.fragments.LectureNoteFragment;
-import com.linstick.collegeassistant.fragments.LifeNoteFragment;
-import com.linstick.collegeassistant.fragments.OtherNoteFragment;
-import com.linstick.collegeassistant.fragments.SportNoteFragment;
+import com.linstick.collegeassistant.base.BaseActivity;
+import com.linstick.collegeassistant.base.BaseSwipeNoteFragment;
+import com.linstick.collegeassistant.beans.User;
+import com.linstick.collegeassistant.fragments.AllNotesSwipeNoteFragment;
+import com.linstick.collegeassistant.fragments.CampusTalkSwipeNoteFragment;
+import com.linstick.collegeassistant.fragments.ClubNoteSwipeNoteFragment;
+import com.linstick.collegeassistant.fragments.LectureNoteSwipeNoteFragment;
+import com.linstick.collegeassistant.fragments.LifeNoteSwipeNoteFragment;
+import com.linstick.collegeassistant.fragments.OtherNoteSwipeNoteFragment;
+import com.linstick.collegeassistant.fragments.SportNoteSwipeNoteFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +41,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements
+public class MainActivity extends BaseActivity implements
         NavigationView.OnNavigationItemSelectedListener {
 
     @BindView(R.id.toolbar)
@@ -49,34 +55,34 @@ public class MainActivity extends AppCompatActivity implements
     @BindView(R.id.view_pager)
     ViewPager viewPager;
 
-    private List<BaseFragment> mFragmentList;
+    private List<BaseSwipeNoteFragment> mFragmentList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        setSupportActionBar(toolbar);
+        super.toolbar = toolbar;
+        super.onCreate(savedInstanceState);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_white);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white);
         }
-        sideNavigationBar.setNavigationItemSelectedListener(this);
 
+        sideNavigationBar.setNavigationItemSelectedListener(this);
         initFragment();
+
     }
 
     private void initFragment() {
         mFragmentList = new ArrayList<>();
-        mFragmentList.add(new AllNotesFragment());
-        mFragmentList.add(new ClubNoteFragment());
-        mFragmentList.add(new LectureNoteFragment());
-        mFragmentList.add(new CampusTalkFragment());
-        mFragmentList.add(new SportNoteFragment());
-        mFragmentList.add(new LifeNoteFragment());
-        mFragmentList.add(new OtherNoteFragment());
+        mFragmentList.add(new AllNotesSwipeNoteFragment());
+        mFragmentList.add(new ClubNoteSwipeNoteFragment());
+        mFragmentList.add(new LectureNoteSwipeNoteFragment());
+        mFragmentList.add(new CampusTalkSwipeNoteFragment());
+        mFragmentList.add(new SportNoteSwipeNoteFragment());
+        mFragmentList.add(new LifeNoteSwipeNoteFragment());
+        mFragmentList.add(new OtherNoteSwipeNoteFragment());
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager(), mFragmentList));
@@ -102,11 +108,25 @@ public class MainActivity extends AppCompatActivity implements
                 break;
 
             case R.id.menu_edit:
-                startActivity(new Intent(MainActivity.this, EditActivity.class));
+                startActivity(new Intent(MainActivity.this, EditNoteActivity.class));
                 break;
 
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
+                if (App.getUser() == null) {
+                    // 未登录
+                    sideNavigationBar.getMenu().findItem(R.id.menu_log_out).setVisible(false);
+                    sideNavigationBar.getMenu().findItem(R.id.menu_log_in).setVisible(true);
+                    sideNavigationBar.getMenu().findItem(R.id.menu_sign_in).setVisible(true);
+                    ((ImageView) sideNavigationBar.getHeaderView(0).findViewById(R.id.iv_user_icon)).setImageResource(R.drawable.ic_user_white);
+                    ((TextView) sideNavigationBar.getHeaderView(0).findViewById(R.id.tv_nickname)).setText("未登录");
+                } else {
+                    sideNavigationBar.getMenu().findItem(R.id.menu_log_in).setVisible(false);
+                    sideNavigationBar.getMenu().findItem(R.id.menu_sign_in).setVisible(false);
+                    sideNavigationBar.getMenu().findItem(R.id.menu_log_out).setVisible(true);
+                    ((ImageView) sideNavigationBar.getHeaderView(0).findViewById(R.id.iv_user_icon)).setImageResource(R.mipmap.ic_launcher);
+                    ((TextView) sideNavigationBar.getHeaderView(0).findViewById(R.id.tv_nickname)).setText(App.getUser().getNickName());
+                }
                 break;
         }
         return true;
@@ -118,31 +138,52 @@ public class MainActivity extends AppCompatActivity implements
         switch (item.getItemId()) {
 
             case R.id.menu_my_notes:
-                Toast.makeText(MainActivity.this, "我的帖子", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(MainActivity.this, PersonalNotesActivity.class));
                 break;
 
             case R.id.menu_my_related:
-                Toast.makeText(MainActivity.this, "与我相关", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(MainActivity.this, PersonalRelatedActivity.class));
                 break;
 
             case R.id.menu_my_collections:
-                Toast.makeText(MainActivity.this, "我的收藏", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(MainActivity.this, CollectionsActivity.class));
                 break;
 
             case R.id.menu_feedback:
-                Toast.makeText(MainActivity.this, "用户反馈", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(MainActivity.this, FeedBackActivity.class));
                 break;
 
             case R.id.menu_give_praise:
-                Toast.makeText(MainActivity.this, "给个好评", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "该功能正在开发，敬请期待", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.menu_about_us:
-                Toast.makeText(MainActivity.this, "关于我们", Toast.LENGTH_SHORT).show();
+                AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("关于我们")
+                        .setMessage("本应用由广东工业大学19届学生罗瑞泳自主开发，有什么问题或建议可发送至邮箱：linstick@163.com，感谢您的使用。")
+                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        })
+                        .create();
+                dialog.show();
+
                 break;
 
             case R.id.menu_log_out:
                 Toast.makeText(MainActivity.this, "退出登录", Toast.LENGTH_SHORT).show();
+                App.setUser(null);
+                break;
+
+            case R.id.menu_log_in:
+                Toast.makeText(MainActivity.this, "登录", Toast.LENGTH_SHORT).show();
+                App.setUser(new User());
+                break;
+
+            case R.id.menu_sign_in:
+                Toast.makeText(MainActivity.this, "注册", Toast.LENGTH_SHORT).show();
                 break;
         }
         drawerLayout.closeDrawer(GravityCompat.START);

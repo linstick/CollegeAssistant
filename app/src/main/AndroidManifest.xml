@@ -3,6 +3,7 @@
     package="com.linstick.collegeassistant">
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="高校小助手"
@@ -24,12 +25,12 @@
         </activity>
 
         <activity
-            android:name=".activities.EditActivity"
+            android:name=".activities.EditNoteActivity"
             android:label="添加帖子" />
 
         <activity
             android:name=".activities.SearchActivity"
-            android:label="搜索结果"
+            android:label="搜索"
             android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -51,6 +52,26 @@
         <activity
             android:name=".activities.UserInfoActivity"
             android:label="用户信息">
+        </activity>
+
+        <activity
+            android:name=".activities.PersonalNotesActivity"
+            android:label="我的帖子">
+        </activity>
+
+        <activity
+            android:name=".activities.CollectionsActivity"
+            android:label="我的收藏">
+        </activity>
+
+        <activity
+            android:name=".activities.PersonalRelatedActivity"
+            android:label="与我相关">
+        </activity>
+
+        <activity
+            android:name=".activities.FeedBackActivity"
+            android:label="用户反馈">
         </activity>
     </application>
 

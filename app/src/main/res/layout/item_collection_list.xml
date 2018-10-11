@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_user_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/bg_setting_header" />
+
+        <TextView
+            android:id="@+id/tv_nickname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:layout_toRightOf="@+id/iv_user_icon"
+            android:text="linstick"
+            android:textColor="#444444"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_publish_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/tv_nickname"
+            android:layout_below="@+id/tv_nickname"
+            android:text="2018-10-10 23:59"
+            android:textColor="#999999"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_belong_module"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="社团活动"
+            android:textColor="#FFE67D41"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_item_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <TextView
+            android:id="@+id/tv_note_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="测试标题"
+            android:textColor="#444444"
+            android:textSize="17sp" />
+
+
+        <TextView
+            android:id="@+id/tv_note_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:paddingTop="2dp"
+            android:text="测试内容测试内容撒打发撒打发啊打发都是法师打发打发撒打发撒打发撒打发测试内容测试尼大厦法定待发送地方的飞洒日尔测试尼日尔阿斯顿发打的费撒打发阿斯顿发"
+            android:textColor="#666666"
+            android:textSize="15sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingTop="2dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_weight="3"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/ll_collect_count_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:id="@+id/iv_collect"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_star_gray" />
+
+                    <TextView
+                        android:id="@+id/tv_collect_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:text="100"
+                        android:textColor="#888888"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_comment_count_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:id="@+id/iv_comment"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:src="@drawable/ic_comment_gray" />
+
+                    <TextView
+                        android:id="@+id/tv_comment_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:text="100"
+                        android:textColor="#888888"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_like_count_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:id="@+id/iv_like"
+                        android:layout_width="17dp"
+                        android:layout_height="17dp"
+                        android:src="@drawable/ic_like_gray" />
+
+                    <TextView
+                        android:id="@+id/tv_like_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:gravity="center_vertical"
+                        android:text="100"
+                        android:textColor="#888888"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="right">
+
+                <TextView
+                    android:id="@+id/tv_cancel_collect"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:text="取消收藏"
+                    android:textColor="#da5757"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:background="#DDDDDD" />
+
+
+</LinearLayout>

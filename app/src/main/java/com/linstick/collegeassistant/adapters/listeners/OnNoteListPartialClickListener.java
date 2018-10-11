@@ -1,4 +1,4 @@
-package com.linstick.collegeassistant.adapters;
+package com.linstick.collegeassistant.adapters.listeners;
 
 public interface OnNoteListPartialClickListener {
     void onUserInfoClick(int position);

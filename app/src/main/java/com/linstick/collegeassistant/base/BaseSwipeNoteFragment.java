@@ -1,12 +1,12 @@
-package com.linstick.collegeassistant.fragments;
+package com.linstick.collegeassistant.base;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +16,9 @@ import com.linstick.collegeassistant.R;
 import com.linstick.collegeassistant.activities.NoteDetailActivity;
 import com.linstick.collegeassistant.activities.UserInfoActivity;
 import com.linstick.collegeassistant.adapters.NoteListAdapter;
-import com.linstick.collegeassistant.adapters.OnNoteListPartialClickListener;
-import com.linstick.collegeassistant.base.BaseFragment;
+import com.linstick.collegeassistant.adapters.listeners.OnNoteListPartialClickListener;
 import com.linstick.collegeassistant.beans.Note;
+import com.linstick.collegeassistant.callbacks.LoadDataCallBack;
 import com.linstick.collegeassistant.events.LoadDataEvent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -31,31 +31,70 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AllNotesFragment extends BaseFragment implements OnNoteListPartialClickListener {
+public abstract class BaseSwipeNoteFragment extends Fragment implements OnNoteListPartialClickListener {
 
-    private static final String TAG = "AllNotesFragment";
-
+    protected NoteListAdapter mAdapter;
     @BindView(R.id.rv_note_list)
     RecyclerView noteListRv;
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout refreshLayout;
-
-    private List<Note> mList = new ArrayList<>();
-    private NoteListAdapter mAdapter;
+    private List<Note> mList;
     private LinearLayoutManager mLayoutManager;
     private boolean isLoadingMore;
     private boolean hasMore = true;
 
+    private LoadDataCallBack<Note> refreshCallBack = new LoadDataCallBack<Note>() {
+        @Override
+        public void onSuccess(List<Note> list) {
+            mList.addAll(0, list);
+            EventBus.getDefault().post(LoadDataEvent.REFRESH_SUCCESS);
+        }
+
+        @Override
+        public void onSuccessEmpty() {
+            EventBus.getDefault().post(LoadDataEvent.REFRESH_SUCCESS);
+        }
+
+        @Override
+        public void onFail(String error) {
+            EventBus.getDefault().post(LoadDataEvent.REFRESH_FAIL);
+        }
+    };
+
+    private LoadDataCallBack<Note> loadMoreCallBack = new LoadDataCallBack<Note>() {
+        @Override
+        public void onSuccess(List<Note> list) {
+            mList.addAll(list);
+            EventBus.getDefault().post(LoadDataEvent.LOAD_MORE_SUCCESS);
+        }
+
+        @Override
+        public void onSuccessEmpty() {
+            EventBus.getDefault().post(LoadDataEvent.LOAD_MORE_SUCCESS_EMPTY);
+        }
+
+        @Override
+        public void onFail(String error) {
+            EventBus.getDefault().post(LoadDataEvent.LOAD_MORE_FAIL);
+        }
+    };
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mList = new ArrayList<>();
+        mAdapter = new NoteListAdapter(mList);
+        EventBus.getDefault().register(this);
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_all_note, null);
+        View view = inflater.inflate(R.layout.fragment_base_note, null);
         ButterKnife.bind(this, view);
-        mAdapter = new NoteListAdapter(mList);
         mAdapter.setOnNoteListPartialClickListener(this);
-        mLayoutManager = new LinearLayoutManager(getContext());
         noteListRv.setAdapter(mAdapter);
+        mLayoutManager = new LinearLayoutManager(getContext());
         noteListRv.setLayoutManager(mLayoutManager);
         noteListRv.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -68,7 +107,8 @@ public class AllNotesFragment extends BaseFragment implements OnNoteListPartialC
                 super.onScrolled(recyclerView, dx, dy);
                 int position = mLayoutManager.findLastVisibleItemPosition();
                 if (!isLoadingMore && hasMore && position + 3 > mList.size()) {
-                    loadMore();
+                    isLoadingMore = true;
+                    loadMoreData(loadMoreCallBack);
                 }
             }
         });
@@ -77,11 +117,13 @@ public class AllNotesFragment extends BaseFragment implements OnNoteListPartialC
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refresh();
+                refreshData(refreshCallBack);
             }
         });
         if (mList.size() == 0) {
-            refresh();
+            refreshLayout.setRefreshing(true);
+            isLoadingMore = true;
+            loadMoreData(loadMoreCallBack);
         }
         return view;
     }
@@ -89,23 +131,17 @@ public class AllNotesFragment extends BaseFragment implements OnNoteListPartialC
     @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
         EventBus.getDefault().unregister(this);
-    }
-
-    private void refresh() {
-        refreshLayout.setRefreshing(true);
-        new Thread(new RefreshTask()).start();
-    }
-
-    private void loadMore() {
-        isLoadingMore = true;
-        new Thread(new LoadMoreTask()).start();
     }
 
     @Override
@@ -123,7 +159,15 @@ public class AllNotesFragment extends BaseFragment implements OnNoteListPartialC
     @Override
     public void onChangeLikeClick(int position) {
         // 改变点赞
-        Toast.makeText(getActivity(), "点赞" + position, Toast.LENGTH_SHORT).show();
+        Note note = mList.get(position);
+        note.setLiked(!note.isLiked());
+        int likeCount = note.getLikeCount();
+        if (note.isLiked()) {
+            note.setLikeCount(likeCount + 1);
+        } else {
+            note.setLikeCount(likeCount - 1);
+        }
+        mAdapter.notifyItemChanged(position);
     }
 
     @Override
@@ -135,25 +179,32 @@ public class AllNotesFragment extends BaseFragment implements OnNoteListPartialC
     @Override
     public void onChangeCollectClick(int position) {
         // 改变收藏
-        Toast.makeText(getActivity(), "收藏" + position, Toast.LENGTH_SHORT).show();
+        Note note = mList.get(position);
+        note.setCollected(!note.isCollected());
+        int collectCount = note.getCollectCount();
+        if (note.isCollected()) {
+            note.setCollectCount(collectCount + 1);
+            Toast.makeText(getActivity(), "收藏成功", Toast.LENGTH_SHORT).show();
+        } else {
+            note.setCollectCount(collectCount - 1);
+        }
+        mAdapter.notifyItemChanged(position);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onStopRefresh(LoadDataEvent event) {
+    public void onStopLoadData(LoadDataEvent event) {
+        refreshLayout.setRefreshing(false);
         switch (event) {
             case REFRESH_SUCCESS:
-                refreshLayout.setRefreshing(false);
                 mAdapter.notifyDataSetChanged();
                 noteListRv.smoothScrollToPosition(0);
                 break;
 
             case REFRESH_SUCCESS_EMPTY:
-                refreshLayout.setRefreshing(false);
                 Toast.makeText(getContext(), "暂时无更多新数据了", Toast.LENGTH_SHORT).show();
                 break;
 
             case REFRESH_FAIL:
-                refreshLayout.setRefreshing(false);
                 Toast.makeText(getContext(), "更新失败，请求检查网络或稍后再试", Toast.LENGTH_SHORT).show();
                 break;
 
@@ -174,56 +225,9 @@ public class AllNotesFragment extends BaseFragment implements OnNoteListPartialC
         }
     }
 
-    @Override
-    public String getTitle() {
-        return "全部";
-    }
+    public abstract String getTitle();
 
-    class RefreshTask implements Runnable {
-        @Override
-        public void run() {
-            Log.d(TAG, "run: refreshing");
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            // ----使用Gson解析数据----
-            List<Note> result = new ArrayList<>();
-            for (int i = 0; i < 5; i++) {
-                result.add(new Note());
-            }
-            // -----------------------
-            if (result.size() > 0) {
-                mList.addAll(0, result);
-                EventBus.getDefault().post(LoadDataEvent.REFRESH_SUCCESS);
-            } else {
-                EventBus.getDefault().post(LoadDataEvent.REFRESH_SUCCESS_EMPTY);
-            }
-        }
-    }
+    public abstract void refreshData(LoadDataCallBack callBack);
 
-    class LoadMoreTask implements Runnable {
-        @Override
-        public void run() {
-            Log.d(TAG, "run: loading more");
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            // ----使用Gson解析数据----
-            List<Note> result = new ArrayList<>();
-            for (int i = 0; i < 5; i++) {
-                result.add(new Note());
-            }
-            // ----------------------
-            if (result.size() > 0) {
-                mList.addAll(result);
-                EventBus.getDefault().post(LoadDataEvent.LOAD_MORE_SUCCESS);
-            } else {
-                EventBus.getDefault().post(LoadDataEvent.LOAD_MORE_SUCCESS_EMPTY);
-            }
-        }
-    }
+    public abstract void loadMoreData(LoadDataCallBack callBack);
 }

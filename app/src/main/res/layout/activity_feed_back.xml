@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_toolbar" />
+
+    <RelativeLayout
+        android:id="@+id/rl_feedback_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:padding="10dp">
+
+        <EditText
+            android:id="@+id/et_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_border_orange"
+            android:gravity="left|top"
+            android:hint="请留下您的问题或建议"
+            android:minLines="6"
+            android:paddingBottom="5dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="5dp"
+            android:textColor="#555555"
+            android:textSize="15sp" />
+
+
+        <ImageView
+            android:id="@+id/iv_send"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignRight="@+id/et_input"
+            android:layout_below="@+id/et_input"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/ic_send_orange" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_feedback_result_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:text="反馈成功，我们及时查阅并作相关处理。您也可以通过邮箱：linstick@163.com与我们取得联系，感谢您的使用。"
+            android:textColor="#666666"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

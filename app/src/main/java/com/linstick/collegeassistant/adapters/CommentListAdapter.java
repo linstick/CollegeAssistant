@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.linstick.collegeassistant.R;
+import com.linstick.collegeassistant.adapters.listeners.OnCommentListClickListener;
 import com.linstick.collegeassistant.beans.Comment;
 import com.linstick.collegeassistant.utils.TimeFactoryUtil;
 
@@ -41,7 +42,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
         Comment comment = mList.get(position);
         holder.userIconIv.setImageResource(R.drawable.bg_setting_header);
         holder.nicknameTv.setText(comment.getPublisher().getNickName());
-        holder.publishTimeTv.setText(TimeFactoryUtil.dateFormat(comment.getPublishTime()));
+        holder.publishTimeTv.setText(TimeFactoryUtil.dateToStringFormat(comment.getPublishTime()));
         holder.commentTv.setText(comment.getContent());
         if (position + 1 == mList.size()) {
             holder.divideLineView.setVisibility(View.GONE);

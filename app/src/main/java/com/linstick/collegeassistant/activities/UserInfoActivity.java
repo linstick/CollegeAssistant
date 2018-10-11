@@ -4,19 +4,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.linstick.collegeassistant.R;
+import com.linstick.collegeassistant.base.BaseActivity;
 import com.linstick.collegeassistant.beans.User;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class UserInfoActivity extends AppCompatActivity {
+public class UserInfoActivity extends BaseActivity {
 
     private final static String USER_INFO_TAG = "USER_INFO_TAG";
 
@@ -33,16 +32,11 @@ public class UserInfoActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
         ButterKnife.bind(this);
 
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_back_white);
-        }
+        super.toolbar = toolbar;
+        super.onCreate(savedInstanceState);
 
         initData();
     }

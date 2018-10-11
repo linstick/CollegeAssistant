@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="belong_module">
+        <item>企业宣讲会</item>
+        <item>社团活动</item>
+        <item>高校讲座</item>
+        <item>体育活动</item>
+        <item>校园生活</item>
+        <item>其他活动</item>
+    </string-array>
+</resources>

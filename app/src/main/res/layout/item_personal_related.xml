@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="10dp">
+
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="用户 linstick 在标题为“Bigo薪资如何”的帖子中回复了你： 应该会有15k/月"
+        android:textColor="#555555"
+        android:textSize="15sp" />
+
+
+    <TextView
+        android:id="@+id/tv_send_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/tv_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="2dp"
+        android:text="2018-10-10 23:59"
+        android:textColor="#999999"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/tv_browse_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/tv_content"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="2dp"
+        android:text="查看详情"
+        android:textColor="#4ed229"
+        android:textSize="14sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_below="@+id/tv_browse_details"
+        android:layout_marginTop="10dp"
+        android:background="#DDDDDD" />
+
+</RelativeLayout>

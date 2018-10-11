@@ -134,6 +134,7 @@
                     android:textSize="15sp" />
 
                 <LinearLayout
+                    android:id="@+id/ll_start_time_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
@@ -182,6 +183,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_address_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
@@ -202,6 +204,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_remarks_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -240,6 +243,8 @@
                     android:id="@+id/tv_comment_count"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
                     android:text="评论(100)"
                     android:textColor="#444444"
                     android:textSize="16dp" />

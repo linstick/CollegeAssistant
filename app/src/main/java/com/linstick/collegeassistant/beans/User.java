@@ -126,4 +126,23 @@ public class User implements Serializable {
     public void setRegisterTime(Date registerTime) {
         this.registerTime = registerTime;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", nickName='" + nickName + '\'' +
+                ", realName='" + realName + '\'' +
+                ", university='" + university + '\'' +
+                ", campusArea='" + campusArea + '\'' +
+                ", klazz='" + klazz + '\'' +
+                ", department='" + department + '\'' +
+                ", major='" + major + '\'' +
+                ", address='" + address + '\'' +
+                ", cellNumber='" + cellNumber + '\'' +
+                ", password='" + password + '\'' +
+                ", isMale=" + isMale +
+                ", registerTime=" + registerTime +
+                '}';
+    }
 }

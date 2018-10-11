@@ -42,5 +42,13 @@
         android:id="@+id/menu_log_out"
         android:icon="@drawable/ic_logout_gray"
         android:title="退出登录" />
+    <item
+        android:id="@+id/menu_log_in"
+        android:icon="@drawable/ic_login_gray"
+        android:title="登录" />
+    <item
+        android:id="@+id/menu_sign_in"
+        android:icon="@drawable/ic_sign_in_gray"
+        android:title="注册" />
 
 </menu>

@@ -40,7 +40,7 @@
         android:layout_marginTop="2dp"
         android:text="测试内容测试内容撒打发撒打发啊打发都是法师打发打发撒打发撒打发撒打发测试内容测试尼大厦法定待发送地方的飞洒日尔测试尼日尔阿斯顿发打的费撒打发阿斯顿发"
         android:textColor="#777777"
-        android:textSize="15sp" />
+        android:textSize="14sp" />
 
     <View
         android:id="@+id/view_divide_line"

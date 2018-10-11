@@ -1,14 +1,13 @@
 package com.linstick.collegeassistant.activities;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
+import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
-import com.linstick.collegeassistant.R;
-import com.linstick.collegeassistant.adapters.NoteListAdapter;
-import com.linstick.collegeassistant.adapters.listeners.OnNoteListPartialClickListener;
+import com.linstick.collegeassistant.adapters.PersonalNoteListNoteAdapter;
+import com.linstick.collegeassistant.adapters.listeners.OnPersonalNotePartialClickListener;
 import com.linstick.collegeassistant.base.BaseSwipeNoteActivity;
 import com.linstick.collegeassistant.beans.Note;
 import com.linstick.collegeassistant.callbacks.LoadDataCallBack;
@@ -16,20 +15,14 @@ import com.linstick.collegeassistant.callbacks.LoadDataCallBack;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
+public class PersonalNotesActivity extends BaseSwipeNoteActivity implements OnPersonalNotePartialClickListener {
 
-public class SearchActivity extends BaseSwipeNoteActivity implements OnNoteListPartialClickListener {
-
-
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.mList = new ArrayList<>();
-        NoteListAdapter mAdapter = new NoteListAdapter(mList);
-        mAdapter.setOnNoteListPartialClickListener(this);
-        mAdapter.setShowBelongModule(true);
+        PersonalNoteListNoteAdapter mAdapter = new PersonalNoteListNoteAdapter(mList);
+        mAdapter.setOnPersonalNotePartialClickListener(this);
         super.mAdapter = mAdapter;
         super.onCreate(savedInstanceState);
     }
@@ -60,7 +53,6 @@ public class SearchActivity extends BaseSwipeNoteActivity implements OnNoteListP
                 }
             }
         }).start();
-
     }
 
     @Override
@@ -92,59 +84,31 @@ public class SearchActivity extends BaseSwipeNoteActivity implements OnNoteListP
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                SearchActivity.this.finish();
-                break;
-        }
-        return true;
-    }
-
-    @Override
-    public void onUserInfoClick(int position) {
-        // 查看用户信息
-        UserInfoActivity.startAction(SearchActivity.this, mList.get(position).getPublisher());
-    }
-
-    @Override
-    public void onAddCommentClick(int position) {
-        // 跳转到评论页面
-        NoteDetailActivity.startActionByAddComment(SearchActivity.this, mList.get(position));
-    }
-
-    @Override
-    public void onChangeLikeClick(int position) {
-        // 改变点赞
-        Note note = mList.get(position);
-        note.setLiked(!note.isLiked());
-        int likeCount = note.getLikeCount();
-        if (note.isLiked()) {
-            note.setLikeCount(likeCount + 1);
-        } else {
-            note.setLikeCount(likeCount - 1);
-        }
-        mAdapter.notifyItemChanged(position);
-    }
-
-    @Override
     public void onNoteItemClick(int position) {
-        // 跳转到帖子详情界面
-        NoteDetailActivity.startAction(SearchActivity.this, mList.get(position));
+        NoteDetailActivity.startAction(PersonalNotesActivity.this, mList.get(position));
     }
 
     @Override
-    public void onChangeCollectClick(int position) {
-        // 改变收藏
+    public void onItemDeleteClick(final int position) {
         Note note = mList.get(position);
-        note.setCollected(!note.isCollected());
-        int collectCount = note.getCollectCount();
-        if (note.isCollected()) {
-            note.setCollectCount(collectCount + 1);
-            Toast.makeText(SearchActivity.this, "收藏成功", Toast.LENGTH_SHORT).show();
-        } else {
-            note.setCollectCount(collectCount - 1);
-        }
-        mAdapter.notifyItemChanged(position);
+        new AlertDialog.Builder(this)
+                .setTitle("温馨提示")
+                .setMessage("您确定要删除标题为“" + note.getTitle() + "”的帖子吗？")
+                .setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        mList.remove(position);
+                        mAdapter.notifyDataSetChanged();
+                        Toast.makeText(PersonalNotesActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                })
+                .create()
+                .show();
     }
 }

@@ -5,15 +5,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.linstick.collegeassistant.base.BaseFragment;
+import com.linstick.collegeassistant.base.BaseSwipeNoteFragment;
 
 import java.util.List;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 
-    List<BaseFragment> mFragmentList;
+    List<BaseSwipeNoteFragment> mFragmentList;
 
-    public ViewPagerAdapter(FragmentManager fm, List<BaseFragment> mList) {
+    public ViewPagerAdapter(FragmentManager fm, List<BaseSwipeNoteFragment> mList) {
         super(fm);
         this.mFragmentList = mList;
     }
