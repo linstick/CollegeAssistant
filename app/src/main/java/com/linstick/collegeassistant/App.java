@@ -6,7 +6,7 @@ import com.linstick.collegeassistant.beans.User;
 
 public class App extends Application {
 
-    private static User mUser;
+    private static User mUser = new User();
 
     public static User getUser() {
         return mUser;

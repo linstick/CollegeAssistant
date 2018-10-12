@@ -16,27 +16,77 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="center_horizontal"
-            android:padding="10dp">
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/iv_user_icon"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/bg_setting_header"/>
-
-            <TextView
-                android:id="@+id/tv_nickname"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:textColor="#555555"
-                android:textSize="15sp"
-                android:text="用户1"/>
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="头像"
+                    android:textSize="15sp"
+                    android:textColor="#555555"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3">
+
+                    <ImageView
+                        android:id="@+id/iv_user_icon"
+                        android:layout_width="46dp"
+                        android:layout_height="46dp"
+                        android:src="@drawable/bg_setting_header"
+                        android:focusableInTouchMode="true"
+                        android:focusable="true"
+                        android:scaleType="fitXY"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="10dp"
+                android:background="#DDDDDD"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="昵称"
+                    android:textSize="15sp"
+                    android:textColor="#555555"/>
+
+                <EditText
+                    android:id="@+id/et_nickname_input"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:textSize="14sp"
+                    android:textColor="#888888"
+                    android:text="linstick"
+                    android:background="@null"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
                 android:background="#DDDDDD"/>
 
             <LinearLayout
@@ -54,14 +104,15 @@
                     android:textSize="15sp"
                     android:textColor="#555555"/>
 
-                <TextView
-                    android:id="@+id/tv_real_name"
+                <EditText
+                    android:id="@+id/et_read_name_input"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
                     android:textSize="14sp"
                     android:textColor="#888888"
-                    android:text="罗瑞泳"/>
+                    android:text="罗瑞泳"
+                    android:background="@null"/>
 
             </LinearLayout>
 
@@ -85,14 +136,31 @@
                     android:textSize="15sp"
                     android:textColor="#555555"/>
 
-                <TextView
-                    android:id="@+id/tv_gender"
+                <RadioGroup
+                    android:id="@+id/rg_gender"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
-                    android:textSize="14sp"
-                    android:textColor="#888888"
-                    android:text="男"/>
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/rb_male"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:textColor="#888888"
+                        android:text="男"
+                        android:checked="true"/>
+
+                    <RadioButton
+                        android:id="@+id/rb_female"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:textColor="#888888"
+                        android:layout_marginLeft="15dp"
+                        android:text="女"/>
+                </RadioGroup>
 
             </LinearLayout>
 
@@ -116,14 +184,80 @@
                     android:textSize="15sp"
                     android:textColor="#555555"/>
 
-                <TextView
-                    android:id="@+id/tv_age"
+                <EditText
+                    android:id="@+id/et_age_input"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
                     android:textSize="14sp"
                     android:textColor="#888888"
-                    android:text="23"/>
+                    android:inputType="number"
+                    android:text="23"
+                    android:background="@null"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#DDDDDD"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="电话"
+                    android:textSize="15sp"
+                    android:textColor="#555555"/>
+
+                <EditText
+                    android:id="@+id/et_cell_number_input"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:textSize="14sp"
+                    android:textColor="#888888"
+                    android:text="15102032936"
+                    android:background="@null"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#DDDDDD"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="地址"
+                    android:textSize="15sp"
+                    android:textColor="#555555"/>
+
+                <EditText
+                    android:id="@+id/et_address_input"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:textSize="14sp"
+                    android:textColor="#888888"
+                    android:text="广东省广州市番禺区小谷围街道广东工业大学西区"
+                    android:background="@null"/>
 
             </LinearLayout>
 
@@ -147,14 +281,15 @@
                     android:textSize="15sp"
                     android:textColor="#555555"/>
 
-                <TextView
-                    android:id="@+id/tv_university"
+                <EditText
+                    android:id="@+id/et_university_input"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
                     android:textSize="14sp"
                     android:textColor="#888888"
-                    android:text="广东工业大学(大学城校区)"/>
+                    android:text="广东工业大学(大学城校区)"
+                    android:background="@null"/>
 
             </LinearLayout>
 
@@ -178,14 +313,15 @@
                     android:textSize="15sp"
                     android:textColor="#555555"/>
 
-                <TextView
-                    android:id="@+id/tv_department"
+                <EditText
+                    android:id="@+id/et_department_input"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
                     android:textSize="14sp"
                     android:textColor="#888888"
-                    android:text="计算机学院"/>
+                    android:text="计算机学院"
+                    android:background="@null"/>
 
             </LinearLayout>
 
@@ -209,14 +345,15 @@
                     android:textSize="15sp"
                     android:textColor="#555555"/>
 
-                <TextView
-                    android:id="@+id/tv_major"
+                <EditText
+                    android:id="@+id/et_major_input"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
                     android:textSize="14sp"
                     android:textColor="#888888"
-                    android:text="软件工程"/>
+                    android:text="软件工程"
+                    android:background="@null"/>
 
             </LinearLayout>
 
@@ -240,14 +377,15 @@
                     android:textSize="15sp"
                     android:textColor="#555555"/>
 
-                <TextView
-                    android:id="@+id/tv_klazz"
+                <EditText
+                    android:id="@+id/et_klazz_input"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
                     android:textSize="14sp"
                     android:textColor="#888888"
-                    android:text="15级"/>
+                    android:text="15级"
+                    android:background="@null"/>
 
             </LinearLayout>
 
@@ -271,8 +409,8 @@
                     android:textSize="15sp"
                     android:textColor="#555555"/>
 
-                <TextView
-                    android:id="@+id/tv_description"
+                <EditText
+                    android:id="@+id/et_description_input"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
@@ -280,6 +418,7 @@
                     android:textColor="#888888"
                     android:maxLines="3"
                     android:ellipsize="end"
+                    android:background="@null"
                     android:text="氨基酸地方奥数的奇偶发啊啊的说法破碎的发的死哦"/>
 
             </LinearLayout>
@@ -288,6 +427,32 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#DDDDDD"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="注册"
+                    android:textSize="15sp"
+                    android:textColor="#555555"/>
+
+                <TextView
+                    android:id="@+id/tv_register_time"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:textSize="14sp"
+                    android:textColor="#888888"
+                    android:text="2018-10-12 23:45:59"/>
+
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

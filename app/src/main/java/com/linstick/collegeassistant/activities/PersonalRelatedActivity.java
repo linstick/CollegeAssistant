@@ -77,7 +77,7 @@ public class PersonalRelatedActivity extends BaseActivity implements OnRelatedMe
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        setContentView(R.layout.activity_base_swipe);
+        setContentView(R.layout.base_activity_swipe);
         ButterKnife.bind(this);
 
         super.toolbar = toolbar;

@@ -17,7 +17,9 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,7 +28,6 @@ import com.linstick.collegeassistant.R;
 import com.linstick.collegeassistant.adapters.ViewPagerAdapter;
 import com.linstick.collegeassistant.base.BaseActivity;
 import com.linstick.collegeassistant.base.BaseSwipeNoteFragment;
-import com.linstick.collegeassistant.beans.User;
 import com.linstick.collegeassistant.fragments.AllNotesSwipeNoteFragment;
 import com.linstick.collegeassistant.fragments.CampusTalkSwipeNoteFragment;
 import com.linstick.collegeassistant.fragments.ClubNoteSwipeNoteFragment;
@@ -70,8 +71,19 @@ public class MainActivity extends BaseActivity implements
         }
 
         sideNavigationBar.setNavigationItemSelectedListener(this);
+        LinearLayout headerLayout = (LinearLayout) sideNavigationBar.getHeaderView(0);
+        headerLayout.findViewById(R.id.iv_user_icon).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                drawerLayout.closeDrawer(GravityCompat.START);
+                if (App.getUser() != null) {
+                    startActivity(new Intent(MainActivity.this, EditUserInfoActivity.class));
+                } else {
+                    LoginActivity.startAction(MainActivity.this, true);
+                }
+            }
+        });
         initFragment();
-
     }
 
     private void initFragment() {
@@ -108,7 +120,11 @@ public class MainActivity extends BaseActivity implements
                 break;
 
             case R.id.menu_edit:
-                startActivity(new Intent(MainActivity.this, EditNoteActivity.class));
+                if (App.getUser() == null) {
+                    Toast.makeText(MainActivity.this, "请先登录", Toast.LENGTH_SHORT).show();
+                } else {
+                    startActivity(new Intent(MainActivity.this, EditNoteActivity.class));
+                }
                 break;
 
             case android.R.id.home:
@@ -116,14 +132,18 @@ public class MainActivity extends BaseActivity implements
                 if (App.getUser() == null) {
                     // 未登录
                     sideNavigationBar.getMenu().findItem(R.id.menu_log_out).setVisible(false);
+                    sideNavigationBar.getMenu().findItem(R.id.menu_modify_info).setVisible(false);
+                    sideNavigationBar.getMenu().findItem(R.id.menu_modify_password).setVisible(false);
                     sideNavigationBar.getMenu().findItem(R.id.menu_log_in).setVisible(true);
-                    sideNavigationBar.getMenu().findItem(R.id.menu_sign_in).setVisible(true);
+                    sideNavigationBar.getMenu().findItem(R.id.menu_register).setVisible(true);
                     ((ImageView) sideNavigationBar.getHeaderView(0).findViewById(R.id.iv_user_icon)).setImageResource(R.drawable.ic_user_white);
                     ((TextView) sideNavigationBar.getHeaderView(0).findViewById(R.id.tv_nickname)).setText("未登录");
                 } else {
                     sideNavigationBar.getMenu().findItem(R.id.menu_log_in).setVisible(false);
-                    sideNavigationBar.getMenu().findItem(R.id.menu_sign_in).setVisible(false);
+                    sideNavigationBar.getMenu().findItem(R.id.menu_register).setVisible(false);
                     sideNavigationBar.getMenu().findItem(R.id.menu_log_out).setVisible(true);
+                    sideNavigationBar.getMenu().findItem(R.id.menu_modify_info).setVisible(true);
+                    sideNavigationBar.getMenu().findItem(R.id.menu_modify_password).setVisible(true);
                     ((ImageView) sideNavigationBar.getHeaderView(0).findViewById(R.id.iv_user_icon)).setImageResource(R.mipmap.ic_launcher);
                     ((TextView) sideNavigationBar.getHeaderView(0).findViewById(R.id.tv_nickname)).setText(App.getUser().getNickName());
                 }
@@ -138,19 +158,47 @@ public class MainActivity extends BaseActivity implements
         switch (item.getItemId()) {
 
             case R.id.menu_my_notes:
-                startActivity(new Intent(MainActivity.this, PersonalNotesActivity.class));
+                if (App.getUser() == null) {
+                    Toast.makeText(MainActivity.this, "请先登录", Toast.LENGTH_SHORT).show();
+                    LoginActivity.startAction(MainActivity.this, true);
+                } else {
+                    startActivity(new Intent(MainActivity.this, PersonalNotesActivity.class));
+                }
                 break;
 
             case R.id.menu_my_related:
-                startActivity(new Intent(MainActivity.this, PersonalRelatedActivity.class));
+                if (App.getUser() == null) {
+                    Toast.makeText(MainActivity.this, "请先登录", Toast.LENGTH_SHORT).show();
+                    LoginActivity.startAction(MainActivity.this, true);
+                } else {
+                    startActivity(new Intent(MainActivity.this, PersonalRelatedActivity.class));
+                }
                 break;
 
             case R.id.menu_my_collections:
-                startActivity(new Intent(MainActivity.this, CollectionsActivity.class));
+                if (App.getUser() == null) {
+                    Toast.makeText(MainActivity.this, "请先登录", Toast.LENGTH_SHORT).show();
+                    LoginActivity.startAction(MainActivity.this, true);
+                } else {
+                    startActivity(new Intent(MainActivity.this, CollectionsActivity.class));
+                }
+                break;
+
+            case R.id.menu_modify_info:
+                startActivity(new Intent(MainActivity.this, EditUserInfoActivity.class));
+                break;
+
+            case R.id.menu_modify_password:
+                startActivity(new Intent(MainActivity.this, ModifyPasswordActivity.class));
                 break;
 
             case R.id.menu_feedback:
-                startActivity(new Intent(MainActivity.this, FeedBackActivity.class));
+                if (App.getUser() == null) {
+                    Toast.makeText(MainActivity.this, "请先登录", Toast.LENGTH_SHORT).show();
+                    LoginActivity.startAction(MainActivity.this, true);
+                } else {
+                    startActivity(new Intent(MainActivity.this, FeedBackActivity.class));
+                }
                 break;
 
             case R.id.menu_give_praise:
@@ -173,17 +221,16 @@ public class MainActivity extends BaseActivity implements
                 break;
 
             case R.id.menu_log_out:
-                Toast.makeText(MainActivity.this, "退出登录", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "已退出登录", Toast.LENGTH_SHORT).show();
                 App.setUser(null);
                 break;
 
             case R.id.menu_log_in:
-                Toast.makeText(MainActivity.this, "登录", Toast.LENGTH_SHORT).show();
-                App.setUser(new User());
+                LoginActivity.startAction(MainActivity.this, true);
                 break;
 
-            case R.id.menu_sign_in:
-                Toast.makeText(MainActivity.this, "注册", Toast.LENGTH_SHORT).show();
+            case R.id.menu_register:
+                LoginActivity.startAction(MainActivity.this, false);
                 break;
         }
         drawerLayout.closeDrawer(GravityCompat.START);

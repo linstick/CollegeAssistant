@@ -7,8 +7,8 @@ public class User implements Serializable {
     private int id;
     private String nickName;
     private String realName;
+    private int age;
     private String university;
-    private String campusArea;
     private String klazz;
     private String department;
     private String major;
@@ -16,10 +16,24 @@ public class User implements Serializable {
     private String cellNumber;
     private String password;
     private boolean isMale;
+    private String description;
     private Date registerTime;
 
     public User() {
+        this.id = (int) (Math.random() * 10000);
         this.nickName = "用户" + (int) (Math.random() * 1000);
+        this.realName = "罗瑞泳";
+        this.age = 23;
+        this.isMale = true;
+        this.university = "广东工业大学";
+        this.department = "计算机学院";
+        this.major = "软件工程";
+        this.klazz = "15级";
+        this.description = "Android应用开发入门Coder";
+        this.cellNumber = "15102032936";
+        this.address = "广东省广州市番禺区小谷围街道广东工业大学西生活区";
+        registerTime = new Date();
+
     }
 
 
@@ -53,14 +67,6 @@ public class User implements Serializable {
 
     public void setUniversity(String university) {
         this.university = university;
-    }
-
-    public String getCampusArea() {
-        return campusArea;
-    }
-
-    public void setCampusArea(String campusArea) {
-        this.campusArea = campusArea;
     }
 
     public String getKlazz() {
@@ -127,14 +133,30 @@ public class User implements Serializable {
         this.registerTime = registerTime;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
                 ", nickName='" + nickName + '\'' +
                 ", realName='" + realName + '\'' +
+                ", age='" + age + '\'' +
                 ", university='" + university + '\'' +
-                ", campusArea='" + campusArea + '\'' +
                 ", klazz='" + klazz + '\'' +
                 ", department='" + department + '\'' +
                 ", major='" + major + '\'' +
@@ -143,6 +165,7 @@ public class User implements Serializable {
                 ", password='" + password + '\'' +
                 ", isMale=" + isMale +
                 ", registerTime=" + registerTime +
+                ", description=" + description +
                 '}';
     }
 }

@@ -73,6 +73,21 @@
             android:name=".activities.FeedBackActivity"
             android:label="用户反馈">
         </activity>
+
+        <activity
+            android:name=".activities.LoginActivity">
+
+        </activity>
+
+        <activity
+            android:name=".activities.EditUserInfoActivity"
+            android:label="编辑资料">
+        </activity>
+
+        <activity
+            android:name=".activities.ModifyPasswordActivity"
+            android:label="修改密码">
+        </activity>
     </application>
 
 </manifest>

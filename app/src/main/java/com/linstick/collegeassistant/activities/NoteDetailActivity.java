@@ -16,6 +16,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.linstick.collegeassistant.App;
 import com.linstick.collegeassistant.R;
 import com.linstick.collegeassistant.adapters.CommentListAdapter;
 import com.linstick.collegeassistant.adapters.listeners.OnCommentListClickListener;
@@ -136,6 +137,11 @@ public class NoteDetailActivity extends BaseActivity implements OnCommentListCli
                 likeIv.setImageResource(mNote.isLiked() ? R.drawable.ic_like_orange : R.drawable.ic_like_gray);
                 break;
             case R.id.iv_send:
+                if (App.getUser() == null) {
+                    Toast.makeText(NoteDetailActivity.this, "请先登录", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 String content = inputEt.getText().toString().trim();
                 if (TextUtils.isEmpty(content)) {
                     Toast.makeText(NoteDetailActivity.this, "不能发表空评论喔^_^", Toast.LENGTH_SHORT).show();

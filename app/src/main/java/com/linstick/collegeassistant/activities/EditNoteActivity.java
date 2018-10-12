@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -14,16 +13,15 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.linstick.collegeassistant.R;
-import com.linstick.collegeassistant.base.BaseActivity;
+import com.linstick.collegeassistant.base.BaseEditDataActivity;
 import com.linstick.collegeassistant.beans.Module;
 import com.linstick.collegeassistant.beans.Note;
 import com.linstick.collegeassistant.utils.TimeFactoryUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
-public class EditNoteActivity extends BaseActivity implements AdapterView.OnItemSelectedListener {
+public class EditNoteActivity extends BaseEditDataActivity implements AdapterView.OnItemSelectedListener {
     private static final String TAG = "EditNoteActivity";
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -55,8 +53,25 @@ public class EditNoteActivity extends BaseActivity implements AdapterView.OnItem
     EditText remarksInputEt;
     private String[] mItemList;
 
-    @OnClick({R.id.iv_send})
-    public void onClick(View view) {
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        setContentView(R.layout.activity_edit_note);
+        ButterKnife.bind(this);
+
+        super.toolbar = toolbar;
+        super.onCreate(savedInstanceState);
+
+
+        // 建立数据源
+        mItemList = getResources().getStringArray(R.array.belong_module);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item_module_spinner, R.id.tv_module, mItemList);
+        belongModuleSpinner.setAdapter(adapter);
+        belongModuleSpinner.setOnItemSelectedListener(this);
+
+    }
+
+    @Override
+    public void checkAndCommitData() {
         int count = belongModuleSpinner.getCount();
         int position = belongModuleSpinner.getSelectedItemPosition();
         String title = titleInputEt.getText().toString().trim();
@@ -111,26 +126,8 @@ public class EditNoteActivity extends BaseActivity implements AdapterView.OnItem
             note.setAddress(address);
             note.setRemarks(remarks);
         }
-        Log.d(TAG, note.toString());
         Toast.makeText(EditNoteActivity.this, "发表成功", Toast.LENGTH_SHORT).show();
         finish();
-    }
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        setContentView(R.layout.activity_edit_note);
-        ButterKnife.bind(this);
-
-        super.toolbar = toolbar;
-        super.onCreate(savedInstanceState);
-
-
-        // 建立数据源
-        mItemList = getResources().getStringArray(R.array.belong_module);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, mItemList);
-        belongModuleSpinner.setAdapter(adapter);
-        belongModuleSpinner.setOnItemSelectedListener(this);
-
     }
 
     @Override

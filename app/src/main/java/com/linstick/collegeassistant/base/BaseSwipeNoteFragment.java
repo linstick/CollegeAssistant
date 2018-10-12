@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.linstick.collegeassistant.App;
 import com.linstick.collegeassistant.R;
 import com.linstick.collegeassistant.activities.NoteDetailActivity;
 import com.linstick.collegeassistant.activities.UserInfoActivity;
@@ -90,7 +91,7 @@ public abstract class BaseSwipeNoteFragment extends Fragment implements OnNoteLi
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_base_note, null);
+        View view = inflater.inflate(R.layout.base_fragment_note, null);
         ButterKnife.bind(this, view);
         mAdapter.setOnNoteListPartialClickListener(this);
         noteListRv.setAdapter(mAdapter);
@@ -153,12 +154,20 @@ public abstract class BaseSwipeNoteFragment extends Fragment implements OnNoteLi
     @Override
     public void onAddCommentClick(int position) {
         // 跳转到评论页面
+        if (App.getUser() == null) {
+            Toast.makeText(getContext(), "请先登录", Toast.LENGTH_SHORT).show();
+            return;
+        }
         NoteDetailActivity.startActionByAddComment(getContext(), mList.get(position));
     }
 
     @Override
     public void onChangeLikeClick(int position) {
         // 改变点赞
+        if (App.getUser() == null) {
+            Toast.makeText(getContext(), "请先登录", Toast.LENGTH_SHORT).show();
+            return;
+        }
         Note note = mList.get(position);
         note.setLiked(!note.isLiked());
         int likeCount = note.getLikeCount();
@@ -167,18 +176,28 @@ public abstract class BaseSwipeNoteFragment extends Fragment implements OnNoteLi
         } else {
             note.setLikeCount(likeCount - 1);
         }
-        mAdapter.notifyItemChanged(position);
+        NoteListAdapter.OrdinaryViewHolder viewHolder = (NoteListAdapter.OrdinaryViewHolder) noteListRv.findViewHolderForAdapterPosition(position);
+        viewHolder.likeIv.setImageResource(note.isLiked() ? R.drawable.ic_like_orange : R.drawable.ic_like_gray);
+        viewHolder.likeCountTv.setText(note.getLikeCount() + "");
     }
 
     @Override
     public void onNoteItemClick(int position) {
         // 跳转到帖子详情界面
+        if (App.getUser() == null) {
+            Toast.makeText(getContext(), "请先登录", Toast.LENGTH_SHORT).show();
+            return;
+        }
         NoteDetailActivity.startAction(getContext(), mList.get(position));
     }
 
     @Override
     public void onChangeCollectClick(int position) {
         // 改变收藏
+        if (App.getUser() == null) {
+            Toast.makeText(getContext(), "请先登录", Toast.LENGTH_SHORT).show();
+            return;
+        }
         Note note = mList.get(position);
         note.setCollected(!note.isCollected());
         int collectCount = note.getCollectCount();
@@ -188,7 +207,9 @@ public abstract class BaseSwipeNoteFragment extends Fragment implements OnNoteLi
         } else {
             note.setCollectCount(collectCount - 1);
         }
-        mAdapter.notifyItemChanged(position);
+        NoteListAdapter.OrdinaryViewHolder viewHolder = (NoteListAdapter.OrdinaryViewHolder) noteListRv.findViewHolderForAdapterPosition(position);
+        viewHolder.collectIv.setImageResource(note.isCollected() ? R.drawable.ic_star_orange : R.drawable.ic_star_gray);
+        viewHolder.collectCountTv.setText(note.getCollectCount() + "");
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

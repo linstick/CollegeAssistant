@@ -89,8 +89,18 @@ public class NoteListAdapter extends BaseSwipeNoteAdapter {
         this.showBelongModule = showBelongModule;
     }
 
-    class OrdinaryViewHolder extends RecyclerView.ViewHolder {
+    public class OrdinaryViewHolder extends RecyclerView.ViewHolder {
 
+        @BindView(R.id.tv_collect_count)
+        public TextView collectCountTv;
+        @BindView(R.id.tv_comment_count)
+        public TextView commentCountTv;
+        @BindView(R.id.tv_like_count)
+        public TextView likeCountTv;
+        @BindView(R.id.iv_collect)
+        public ImageView collectIv;
+        @BindView(R.id.iv_like)
+        public ImageView likeIv;
         @BindView(R.id.iv_user_icon)
         ImageView userIconIv;
         @BindView(R.id.tv_nickname)
@@ -103,16 +113,6 @@ public class NoteListAdapter extends BaseSwipeNoteAdapter {
         TextView noteTitleTv;
         @BindView(R.id.tv_note_content)
         TextView noteContentTv;
-        @BindView(R.id.tv_collect_count)
-        TextView collectCountTv;
-        @BindView(R.id.tv_comment_count)
-        TextView commentCountTv;
-        @BindView(R.id.tv_like_count)
-        TextView likeCountTv;
-        @BindView(R.id.iv_collect)
-        ImageView collectIv;
-        @BindView(R.id.iv_like)
-        ImageView likeIv;
         @BindView(R.id.ll_collect_count_layout)
         LinearLayout collectCountLayout;
         @BindView(R.id.ll_comment_count_layout)

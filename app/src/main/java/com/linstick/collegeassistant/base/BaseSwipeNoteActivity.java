@@ -24,6 +24,8 @@ import butterknife.ButterKnife;
 
 public abstract class BaseSwipeNoteActivity extends BaseActivity {
     private static final String TAG = "BaseSwipeNoteActivity";
+    @BindView(R.id.rv_note_list)
+    public RecyclerView noteListRv;
     protected List<Note> mList;
     protected BaseSwipeNoteAdapter mAdapter;
     protected LoadDataCallBack<Note> refreshCallBack = new LoadDataCallBack<Note>() {
@@ -62,8 +64,6 @@ public abstract class BaseSwipeNoteActivity extends BaseActivity {
     };
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.rv_note_list)
-    RecyclerView noteListRv;
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout refreshLayout;
     private LinearLayoutManager mLayoutManager;
@@ -72,7 +72,7 @@ public abstract class BaseSwipeNoteActivity extends BaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        setContentView(R.layout.activity_base_swipe);
+        setContentView(R.layout.base_activity_swipe);
         ButterKnife.bind(this);
 
         super.toolbar = toolbar;

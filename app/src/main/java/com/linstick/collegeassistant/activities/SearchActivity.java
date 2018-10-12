@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.linstick.collegeassistant.App;
 import com.linstick.collegeassistant.R;
 import com.linstick.collegeassistant.adapters.NoteListAdapter;
 import com.linstick.collegeassistant.adapters.listeners.OnNoteListPartialClickListener;
@@ -110,6 +111,10 @@ public class SearchActivity extends BaseSwipeNoteActivity implements OnNoteListP
     @Override
     public void onAddCommentClick(int position) {
         // 跳转到评论页面
+        if (App.getUser() == null) {
+            Toast.makeText(SearchActivity.this, "请先登录", Toast.LENGTH_SHORT).show();
+            return;
+        }
         NoteDetailActivity.startActionByAddComment(SearchActivity.this, mList.get(position));
     }
 
@@ -124,18 +129,28 @@ public class SearchActivity extends BaseSwipeNoteActivity implements OnNoteListP
         } else {
             note.setLikeCount(likeCount - 1);
         }
-        mAdapter.notifyItemChanged(position);
+        NoteListAdapter.OrdinaryViewHolder viewHolder = (NoteListAdapter.OrdinaryViewHolder) noteListRv.findViewHolderForAdapterPosition(position);
+        viewHolder.likeIv.setImageResource(note.isLiked() ? R.drawable.ic_like_orange : R.drawable.ic_like_gray);
+        viewHolder.likeCountTv.setText(note.getLikeCount() + "");
     }
 
     @Override
     public void onNoteItemClick(int position) {
         // 跳转到帖子详情界面
+        if (App.getUser() == null) {
+            Toast.makeText(SearchActivity.this, "请先登录", Toast.LENGTH_SHORT).show();
+            return;
+        }
         NoteDetailActivity.startAction(SearchActivity.this, mList.get(position));
     }
 
     @Override
     public void onChangeCollectClick(int position) {
         // 改变收藏
+        if (App.getUser() == null) {
+            Toast.makeText(SearchActivity.this, "请先登录", Toast.LENGTH_SHORT).show();
+            return;
+        }
         Note note = mList.get(position);
         note.setCollected(!note.isCollected());
         int collectCount = note.getCollectCount();
@@ -145,6 +160,8 @@ public class SearchActivity extends BaseSwipeNoteActivity implements OnNoteListP
         } else {
             note.setCollectCount(collectCount - 1);
         }
-        mAdapter.notifyItemChanged(position);
+        NoteListAdapter.OrdinaryViewHolder viewHolder = (NoteListAdapter.OrdinaryViewHolder) noteListRv.findViewHolderForAdapterPosition(position);
+        viewHolder.collectIv.setImageResource(note.isCollected() ? R.drawable.ic_star_orange : R.drawable.ic_star_gray);
+        viewHolder.collectCountTv.setText(note.getCollectCount() + "");
     }
 }

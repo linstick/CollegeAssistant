@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
-import android.widget.Toast;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.linstick.collegeassistant.R;
 import com.linstick.collegeassistant.base.BaseActivity;
@@ -21,6 +21,26 @@ public class UserInfoActivity extends BaseActivity {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.iv_user_icon)
+    ImageView userIconIv;
+    @BindView(R.id.tv_nickname)
+    TextView nicknameTv;
+    @BindView(R.id.tv_real_name)
+    TextView realNameTv;
+    @BindView(R.id.tv_age)
+    TextView ageTv;
+    @BindView(R.id.tv_gender)
+    TextView genderTv;
+    @BindView(R.id.tv_university)
+    TextView universityTv;
+    @BindView(R.id.tv_department)
+    TextView departmentTv;
+    @BindView(R.id.tv_major)
+    TextView majorTv;
+    @BindView(R.id.tv_klazz)
+    TextView klazzTv;
+    @BindView(R.id.tv_description)
+    TextView descriptionTv;
 
     private User mUser;
 
@@ -43,16 +63,18 @@ public class UserInfoActivity extends BaseActivity {
 
     private void initData() {
         mUser = (User) getIntent().getSerializableExtra(USER_INFO_TAG);
-        Toast.makeText(UserInfoActivity.this, mUser.getNickName(), Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                break;
+        if (mUser == null) {
+            return;
         }
-        return true;
+        userIconIv.setImageResource(R.drawable.bg_setting_header);
+        nicknameTv.setText(mUser.getNickName());
+        realNameTv.setText(mUser.getRealName());
+        ageTv.setText(mUser.getAge() + "");
+        genderTv.setText(mUser.isMale() ? "男" : "女");
+        universityTv.setText(mUser.getUniversity());
+        departmentTv.setText(mUser.getDepartment());
+        majorTv.setText(mUser.getMajor());
+        klazzTv.setText(mUser.getKlazz());
+        descriptionTv.setText(mUser.getDescription());
     }
 }
