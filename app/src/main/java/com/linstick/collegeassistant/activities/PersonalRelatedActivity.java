@@ -12,7 +12,7 @@ import com.linstick.collegeassistant.R;
 import com.linstick.collegeassistant.adapters.SwipeRelatedMessageAdapter;
 import com.linstick.collegeassistant.adapters.listeners.OnRelatedMessageClickListener;
 import com.linstick.collegeassistant.base.BaseActivity;
-import com.linstick.collegeassistant.beans.RelatedMessage;
+import com.linstick.collegeassistant.beans.Relation;
 import com.linstick.collegeassistant.callbacks.LoadDataCallBack;
 import com.linstick.collegeassistant.events.LoadDataEvent;
 
@@ -35,10 +35,10 @@ public class PersonalRelatedActivity extends BaseActivity implements OnRelatedMe
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout refreshLayout;
 
-    private List<RelatedMessage> mList;
-    protected LoadDataCallBack<RelatedMessage> refreshCallBack = new LoadDataCallBack<RelatedMessage>() {
+    private List<Relation> mList;
+    protected LoadDataCallBack<Relation> refreshCallBack = new LoadDataCallBack<Relation>() {
         @Override
-        public void onSuccess(List<RelatedMessage> list) {
+        public void onSuccess(List<Relation> list) {
             mList.addAll(0, list);
             EventBus.getDefault().post(LoadDataEvent.REFRESH_SUCCESS);
         }
@@ -53,9 +53,9 @@ public class PersonalRelatedActivity extends BaseActivity implements OnRelatedMe
             EventBus.getDefault().post(LoadDataEvent.REFRESH_FAIL);
         }
     };
-    protected LoadDataCallBack<RelatedMessage> loadMoreCallBack = new LoadDataCallBack<RelatedMessage>() {
+    protected LoadDataCallBack<Relation> loadMoreCallBack = new LoadDataCallBack<Relation>() {
         @Override
-        public void onSuccess(List<RelatedMessage> list) {
+        public void onSuccess(List<Relation> list) {
             mList.addAll(list);
             EventBus.getDefault().post(LoadDataEvent.LOAD_MORE_SUCCESS);
         }
@@ -177,9 +177,9 @@ public class PersonalRelatedActivity extends BaseActivity implements OnRelatedMe
                     e.printStackTrace();
                 }
                 // 获取数据
-                List<RelatedMessage> result = new ArrayList<>();
+                List<Relation> result = new ArrayList<>();
                 for (int i = 0; i < 10; i++) {
-                    result.add(new RelatedMessage());
+                    result.add(new Relation());
                 }
                 // 对数据结果继续判断
                 if (result == null) {
@@ -204,9 +204,9 @@ public class PersonalRelatedActivity extends BaseActivity implements OnRelatedMe
                     e.printStackTrace();
                 }
                 // 获取数据
-                List<RelatedMessage> result = new ArrayList<>();
+                List<Relation> result = new ArrayList<>();
                 for (int i = 0; i < 10; i++) {
-                    result.add(new RelatedMessage());
+                    result.add(new Relation());
                 }
                 // 对数据结果继续判断
                 if (result == null) {

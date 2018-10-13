@@ -65,6 +65,8 @@ public class NoteListAdapter extends BaseSwipeNoteAdapter {
             if (note.getBelongModule().getId() == Module.MODULE_LIST.length - 2 || note.getTitle().equals("")) {
                 // 校园生活模块隐藏标题，其他活动模块当标题为空时也隐藏
                 viewHolder.noteTitleTv.setVisibility(View.GONE);
+            } else {
+                viewHolder.noteTitleTv.setVisibility(View.VISIBLE);
             }
 
             // 为点击事件做标记

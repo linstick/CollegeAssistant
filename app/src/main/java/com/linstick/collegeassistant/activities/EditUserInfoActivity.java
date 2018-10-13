@@ -42,12 +42,14 @@ public class EditUserInfoActivity extends BaseEditDataActivity {
     EditText ageInputEt;
     @BindView(R.id.et_cell_number_input)
     EditText cellNumberInputEt;
+    @BindView(R.id.et_email_input)
+    EditText emailInputEt;
     @BindView(R.id.et_address_input)
     EditText addressInputEt;
     @BindView(R.id.et_university_input)
     EditText universityInputEt;
     @BindView(R.id.et_department_input)
-    EditText departmaneInputEt;
+    EditText departmentInputEt;
     @BindView(R.id.et_major_input)
     EditText majorInputEt;
     @BindView(R.id.et_klazz_input)
@@ -94,9 +96,10 @@ public class EditUserInfoActivity extends BaseEditDataActivity {
         }
         ageInputEt.setText(mUser.getAge() + "");
         cellNumberInputEt.setText(mUser.getCellNumber());
+        emailInputEt.setText(mUser.getEmail());
         addressInputEt.setText(mUser.getAddress());
         universityInputEt.setText(mUser.getUniversity());
-        departmaneInputEt.setText(mUser.getDepartment());
+        departmentInputEt.setText(mUser.getDepartment());
         majorInputEt.setText(mUser.getMajor());
         descriptionInputEt.setText(mUser.getDescription());
         registerTimeTv.setText(TimeFactoryUtil.dateToStringFormat((mUser.getRegisterTime())));
@@ -113,7 +116,7 @@ public class EditUserInfoActivity extends BaseEditDataActivity {
         newUser.setCellNumber(cellNumberInputEt.getText().toString().trim());
         newUser.setAddress(addressInputEt.getText().toString().trim());
         newUser.setUniversity(universityInputEt.getText().toString().trim());
-        newUser.setDepartment(departmaneInputEt.getText().toString().trim());
+        newUser.setDepartment(departmentInputEt.getText().toString().trim());
         newUser.setMajor(majorInputEt.getText().toString().trim());
         newUser.setKlazz(klazzInputEt.getText().toString().trim());
         newUser.setDescription(descriptionInputEt.getText().toString().trim());

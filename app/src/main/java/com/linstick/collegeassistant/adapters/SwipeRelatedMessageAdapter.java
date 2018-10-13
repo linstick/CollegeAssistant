@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.linstick.collegeassistant.R;
 import com.linstick.collegeassistant.adapters.listeners.OnRelatedMessageClickListener;
 import com.linstick.collegeassistant.base.BaseSwipeAdapter;
-import com.linstick.collegeassistant.beans.RelatedMessage;
+import com.linstick.collegeassistant.beans.Relation;
 import com.linstick.collegeassistant.utils.TimeFactoryUtil;
 
 import java.util.List;
@@ -21,10 +21,10 @@ import butterknife.OnClick;
 
 public class SwipeRelatedMessageAdapter extends BaseSwipeAdapter {
 
-    private List<RelatedMessage> mList;
+    private List<Relation> mList;
     private OnRelatedMessageClickListener mListener;
 
-    public SwipeRelatedMessageAdapter(List<RelatedMessage> mList) {
+    public SwipeRelatedMessageAdapter(List<Relation> mList) {
         this.mList = mList;
     }
 
@@ -45,25 +45,25 @@ public class SwipeRelatedMessageAdapter extends BaseSwipeAdapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof OrdinaryViewHolder) {
-            RelatedMessage message = mList.get(position);
+            Relation message = mList.get(position);
             OrdinaryViewHolder viewHolder = (OrdinaryViewHolder) holder;
             StringBuilder builder = new StringBuilder();
             builder.append("用户 ");
             builder.append(message.getSender().getNickName());
             builder.append(" ");
             switch (message.getType()) {
-                case RelatedMessage.TYPE_COLLECT:
+                case Relation.TYPE_COLLECT:
                     builder.append("在标题为“");
                     builder.append(message.getRelatedNote().getTitle());
                     builder.append("”的帖子中回复了你：");
                     builder.append(message.getContent());
                     break;
-                case RelatedMessage.TYPE_COMMENT:
+                case Relation.TYPE_COMMENT:
                     builder.append("点赞了标题为“");
                     builder.append(message.getRelatedNote().getTitle());
                     builder.append("”的帖子");
                     break;
-                case RelatedMessage.TYPE_LIKE:
+                case Relation.TYPE_LIKE:
                     builder.append("收藏了标题为“");
                     builder.append(message.getRelatedNote().getTitle());
                     builder.append("”的帖子");

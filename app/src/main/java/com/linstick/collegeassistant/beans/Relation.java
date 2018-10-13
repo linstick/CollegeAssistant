@@ -2,7 +2,7 @@ package com.linstick.collegeassistant.beans;
 
 import java.util.Date;
 
-public class RelatedMessage {
+public class Relation {
 
     public final static int TYPE_COLLECT = 1;
     public final static int TYPE_COMMENT = 2;
@@ -14,7 +14,7 @@ public class RelatedMessage {
     private String content;
     private Date sendTime;
 
-    public RelatedMessage() {
+    public Relation() {
         this.sender = new User();
         this.relatedNote = new Note();
         this.type = (int) (Math.random() * 100) % 3 + 1;
@@ -64,7 +64,7 @@ public class RelatedMessage {
 
     @Override
     public String toString() {
-        return "RelatedMessage{" +
+        return "Relation{" +
                 "sender=" + sender +
                 ", relatedNote=" + relatedNote +
                 ", type=" + type +

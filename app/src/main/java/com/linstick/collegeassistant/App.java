@@ -1,10 +1,10 @@
 package com.linstick.collegeassistant;
 
-import android.app.Application;
-
 import com.linstick.collegeassistant.beans.User;
 
-public class App extends Application {
+import org.litepal.LitePalApplication;
+
+public class App extends LitePalApplication {
 
     private static User mUser = new User();
 

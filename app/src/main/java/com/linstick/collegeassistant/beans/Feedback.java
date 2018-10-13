@@ -2,12 +2,12 @@ package com.linstick.collegeassistant.beans;
 
 import java.util.Date;
 
-public class FeedbackInfo {
+public class Feedback {
     private String content;
     private User sender;
     private Date sendTime;
 
-    public FeedbackInfo() {
+    public Feedback() {
         this.sender = new User();
         this.sendTime = new Date();
     }
@@ -38,7 +38,7 @@ public class FeedbackInfo {
 
     @Override
     public String toString() {
-        return "FeedbackInfo{" +
+        return "Feedback{" +
                 "content='" + content + '\'' +
                 ", sender=" + sender +
                 ", sendTime=" + sendTime +

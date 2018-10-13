@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.linstick.collegeassistant.R;
 import com.linstick.collegeassistant.base.BaseActivity;
-import com.linstick.collegeassistant.beans.FeedbackInfo;
+import com.linstick.collegeassistant.beans.Feedback;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,7 +39,7 @@ public class FeedBackActivity extends BaseActivity {
                 }
                 feedbackLayout.requestFocus();
                 // 发送反馈操作
-                FeedbackInfo info = new FeedbackInfo();
+                Feedback info = new Feedback();
                 info.setContent(content);
                 feedbackLayout.setVisibility(View.GONE);
                 feedbackResultLayout.setVisibility(View.VISIBLE);

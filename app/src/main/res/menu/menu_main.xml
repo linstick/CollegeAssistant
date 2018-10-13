@@ -3,13 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_search"
+        android:icon="@drawable/ic_search_white"
         android:title="搜帖"
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/menu_edit"
-        android:icon="@drawable/ic_edit_white"
+        android:icon="@drawable/ic_add_white"
         android:title="添加"
         app:showAsAction="ifRoom"></item>
 
