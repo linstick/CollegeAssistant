@@ -37,7 +37,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_weight="1"
                 android:text="1分钟前"
-                android:textSize="14sp"
+                android:textSize="13sp"
                 android:textColor="#999999" />
 
 

@@ -1,12 +1,17 @@
 package com.linstick.collegeassistant;
 
 import com.linstick.collegeassistant.beans.User;
+import com.linstick.collegeassistant.sqlite.UserDaoUtil;
 
 import org.litepal.LitePalApplication;
 
 public class App extends LitePalApplication {
 
-    private static User mUser = new User();
+    private static User mUser;
+
+    public static int getUserId() {
+        return mUser == null ? -1 : mUser.getId();
+    }
 
     public static User getUser() {
         return mUser;
@@ -19,5 +24,6 @@ public class App extends LitePalApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        mUser = UserDaoUtil.findUser(1);
     }
 }

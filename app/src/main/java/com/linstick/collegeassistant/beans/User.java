@@ -1,10 +1,17 @@
 package com.linstick.collegeassistant.beans;
 
+import org.litepal.crud.DataSupport;
+
 import java.io.Serializable;
 import java.util.Date;
 
-public class User implements Serializable {
+/**
+ * 用户表
+ */
+public class User extends DataSupport implements Serializable {
+
     private int id;
+    private String iconUrl;
     private String nickName;
     private String realName;
     private int age;
@@ -20,24 +27,6 @@ public class User implements Serializable {
     private String description;
     private Date registerTime;
 
-    public User() {
-        this.id = (int) (Math.random() * 10000);
-        this.nickName = "用户" + (int) (Math.random() * 1000);
-        this.realName = "罗瑞泳";
-        this.age = 23;
-        this.isMale = true;
-        this.university = "广东工业大学";
-        this.department = "计算机学院";
-        this.major = "软件工程";
-        this.klazz = "15级";
-        this.description = "Android应用开发入门Coder";
-        this.cellNumber = "15102032936";
-        this.email = "15102032936";
-        this.address = "广东省广州市番禺区小谷围街道广东工业大学西生活区";
-        registerTime = new Date();
-
-    }
-
 
     public int getId() {
         return id;
@@ -45,6 +34,14 @@ public class User implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getIconUrl() {
+        return iconUrl;
+    }
+
+    public void setIconUrl(String iconUrl) {
+        this.iconUrl = iconUrl;
     }
 
     public String getNickName() {
@@ -61,6 +58,14 @@ public class User implements Serializable {
 
     public void setRealName(String realName) {
         this.realName = realName;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
     }
 
     public String getUniversity() {
@@ -119,20 +124,20 @@ public class User implements Serializable {
         this.password = password;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public boolean isMale() {
         return isMale;
     }
 
     public void setMale(boolean male) {
         isMale = male;
-    }
-
-    public Date getRegisterTime() {
-        return registerTime;
-    }
-
-    public void setRegisterTime(Date registerTime) {
-        this.registerTime = registerTime;
     }
 
     public String getDescription() {
@@ -143,39 +148,33 @@ public class User implements Serializable {
         this.description = description;
     }
 
-    public int getAge() {
-        return age;
+    public Date getRegisterTime() {
+        return registerTime;
     }
 
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setRegisterTime(Date registerTime) {
+        this.registerTime = registerTime;
     }
 
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
+                ", iconUrl='" + iconUrl + '\'' +
                 ", nickName='" + nickName + '\'' +
                 ", realName='" + realName + '\'' +
-                ", age='" + age + '\'' +
+                ", age=" + age +
                 ", university='" + university + '\'' +
                 ", klazz='" + klazz + '\'' +
                 ", department='" + department + '\'' +
                 ", major='" + major + '\'' +
                 ", address='" + address + '\'' +
                 ", cellNumber='" + cellNumber + '\'' +
+                ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", isMale=" + isMale +
+                ", description='" + description + '\'' +
                 ", registerTime=" + registerTime +
-                ", description=" + description +
                 '}';
     }
 }

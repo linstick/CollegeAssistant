@@ -21,12 +21,18 @@ import com.linstick.collegeassistant.R;
 import com.linstick.collegeassistant.adapters.CommentListAdapter;
 import com.linstick.collegeassistant.adapters.listeners.OnCommentListClickListener;
 import com.linstick.collegeassistant.base.BaseActivity;
+import com.linstick.collegeassistant.beans.Collection;
 import com.linstick.collegeassistant.beans.Comment;
+import com.linstick.collegeassistant.beans.Like;
 import com.linstick.collegeassistant.beans.Module;
 import com.linstick.collegeassistant.beans.Note;
+import com.linstick.collegeassistant.sqlite.CommentDaoUtil;
+import com.linstick.collegeassistant.sqlite.UserDaoUtil;
 import com.linstick.collegeassistant.utils.TimeFactoryUtil;
 
-import java.util.ArrayList;
+import org.litepal.crud.DataSupport;
+
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -114,24 +120,36 @@ public class NoteDetailActivity extends BaseActivity implements OnCommentListCli
                 UserInfoActivity.startAction(NoteDetailActivity.this, mNote.getPublisher());
                 break;
             case R.id.ll_collect_count_layout:
+                if (App.getUser() == null) {
+                    Toast.makeText(NoteDetailActivity.this, "请先登录", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 mNote.setCollected(!mNote.isCollected());
                 int collectCount = mNote.getCollectCount();
                 if (mNote.isCollected()) {
                     mNote.setCollectCount(collectCount + 1);
+                    new Collection(App.getUserId(), mNote.getId()).save();
                     Toast.makeText(NoteDetailActivity.this, "收藏成功", Toast.LENGTH_SHORT).show();
                 } else {
                     mNote.setCollectCount(collectCount - 1);
+                    DataSupport.deleteAll(Collection.class, "collectorId = ? and belongNoteId = ?", App.getUserId() + "", mNote.getId() + "");
                 }
                 collectCountTv.setText(mNote.getCollectCount() + "");
                 collectIv.setImageResource(mNote.isCollected() ? R.drawable.ic_star_orange : R.drawable.ic_star_gray);
                 break;
             case R.id.ll_like_count_layout:
+                if (App.getUser() == null) {
+                    Toast.makeText(NoteDetailActivity.this, "请先登录", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 mNote.setLiked(!mNote.isLiked());
                 int likeCount = mNote.getLikeCount();
                 if (mNote.isLiked()) {
                     mNote.setLikeCount(likeCount + 1);
+                    new Like(App.getUserId(), mNote.getId()).save();
                 } else {
                     mNote.setLikeCount(likeCount - 1);
+                    DataSupport.deleteAll(Like.class, "likerId = ? and belongNoteId = ?", App.getUserId() + "", mNote.getId() + "");
                 }
                 likeCountTv.setText(mNote.getLikeCount() + "");
                 likeIv.setImageResource(mNote.isLiked() ? R.drawable.ic_like_orange : R.drawable.ic_like_gray);
@@ -141,7 +159,6 @@ public class NoteDetailActivity extends BaseActivity implements OnCommentListCli
                     Toast.makeText(NoteDetailActivity.this, "请先登录", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
                 String content = inputEt.getText().toString().trim();
                 if (TextUtils.isEmpty(content)) {
                     Toast.makeText(NoteDetailActivity.this, "不能发表空评论喔^_^", Toast.LENGTH_SHORT).show();
@@ -149,12 +166,18 @@ public class NoteDetailActivity extends BaseActivity implements OnCommentListCli
                 }
                 Comment comment = new Comment();
                 comment.setContent(content);
+                comment.setBelongNoteId(mNote.getId());
+                comment.setPublisherId(App.getUserId());
+                comment.setPublishTime(new Date());
+                comment.setPublisher(UserDaoUtil.findUser(App.getUserId()));
+                comment.save();
+
                 mCommentList.add(0, comment);
                 mCommentAdapter.notifyDataSetChanged();
                 mNote.setCommentCount(mNote.getCommentCount() + 1);
                 commentCountTv.setText("评论(" + mNote.getCommentCount() + ")");
                 inputEt.setText("");
-                commentCountTv.requestFocus();
+                commentCountTv.clearFocus();
                 Toast.makeText(NoteDetailActivity.this, "发表成功", Toast.LENGTH_SHORT).show();
                 break;
         }
@@ -182,16 +205,13 @@ public class NoteDetailActivity extends BaseActivity implements OnCommentListCli
         nicknameTv.setText(mNote.getPublisher().getNickName());
         publishTimeTv.setText(TimeFactoryUtil.dateToStringFormat(mNote.getPublishTime()));
         noteTitleTv.setText(mNote.getTitle());
+        noteContentTv.setText(mNote.getContent());
         collectCountTv.setText(mNote.getCollectCount() + "");
         commentCountTv.setText("评论(" + mNote.getCommentCount() + ")");
         likeCountTv.setText(mNote.getLikeCount() + "");
         likeIv.setImageResource(mNote.isLiked() ? R.drawable.ic_like_orange : R.drawable.ic_like_gray);
         collectIv.setImageResource(mNote.isCollected() ? R.drawable.ic_star_orange : R.drawable.ic_star_gray);
 
-        startTimeTv.setText(TimeFactoryUtil.dateToStringFormat(mNote.getStartTime()));
-        keepTimeTv.setText(mNote.getKeepTime());
-        locationTv.setText(mNote.getAddress());
-        remarksTv.setText(mNote.getRemarks());
 
         if (mNote.getBelongModule().getId() >= Module.MODULE_LIST.length - 2) {
             startTimeLayout.setVisibility(View.GONE);
@@ -200,14 +220,16 @@ public class NoteDetailActivity extends BaseActivity implements OnCommentListCli
             if (mNote.getBelongModule().getId() == Module.MODULE_LIST.length - 2 || mNote.getTitle().equals("")) {
                 noteTitleTv.setVisibility(View.GONE);
             }
+        } else {
+            startTimeTv.setText(TimeFactoryUtil.dateToStringFormat(mNote.getStartTime()));
+            keepTimeTv.setText(mNote.getKeepTime());
+            locationTv.setText(mNote.getAddress());
+            remarksTv.setText(mNote.getRemarks());
         }
     }
 
     private void initCommentData() {
-        mCommentList = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            mCommentList.add(new Comment());
-        }
+        mCommentList = CommentDaoUtil.findCommentsByNoteId(mNote.getId());
         mCommentAdapter = new CommentListAdapter(mCommentList);
         mCommentAdapter.setOnCommentListClickListener(this);
         commentListRv.setAdapter(mCommentAdapter);

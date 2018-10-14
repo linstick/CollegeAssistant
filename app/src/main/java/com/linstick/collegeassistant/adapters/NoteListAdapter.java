@@ -26,7 +26,6 @@ public class NoteListAdapter extends BaseSwipeNoteAdapter {
 
 
     private OnNoteListPartialClickListener mListener;
-    private boolean showBelongModule = false;
 
     public NoteListAdapter(List<Note> list) {
         super(list);
@@ -55,6 +54,7 @@ public class NoteListAdapter extends BaseSwipeNoteAdapter {
             viewHolder.nicknameTv.setText(note.getPublisher().getNickName());
             viewHolder.publishTimeTv.setText(TimeFactoryUtil.timeToLeftTime(note.getPublishTime()));
             viewHolder.noteTitleTv.setText(note.getTitle());
+            viewHolder.noteContentTv.setText(note.getContent());
             viewHolder.collectCountTv.setText(note.getCollectCount() + "");
             viewHolder.commentCountTv.setText(note.getCommentCount() + "");
             viewHolder.likeCountTv.setText(note.getLikeCount() + "");
@@ -78,17 +78,11 @@ public class NoteListAdapter extends BaseSwipeNoteAdapter {
             viewHolder.nicknameTv.setTag(position);
 
             // 判断是否需要显示帖子所属的模块
-            if (showBelongModule) {
-                viewHolder.belongModuleTv.setVisibility(View.VISIBLE);
-                viewHolder.belongModuleTv.setText(note.getBelongModule().getName());
-            }
+            viewHolder.belongModuleTv.setVisibility(View.VISIBLE);
+            viewHolder.belongModuleTv.setText(note.getBelongModule().getName());
         } else {
             super.onBindFooterViewHolder(holder);
         }
-    }
-
-    public void setShowBelongModule(boolean showBelongModule) {
-        this.showBelongModule = showBelongModule;
     }
 
     public class OrdinaryViewHolder extends RecyclerView.ViewHolder {

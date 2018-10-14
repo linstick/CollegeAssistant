@@ -16,6 +16,7 @@ import com.linstick.collegeassistant.App;
 import com.linstick.collegeassistant.R;
 import com.linstick.collegeassistant.base.BaseEditDataActivity;
 import com.linstick.collegeassistant.beans.User;
+import com.linstick.collegeassistant.sqlite.UserDaoUtil;
 import com.linstick.collegeassistant.utils.TimeFactoryUtil;
 
 import butterknife.BindView;
@@ -110,10 +111,12 @@ public class EditUserInfoActivity extends BaseEditDataActivity {
     public void checkAndCommitData() {
         User newUser = new User();
 
+        newUser.setId(App.getUserId());
         newUser.setNickName(nicknameInputEt.getText().toString().trim());
         newUser.setRealName(realNameInputEt.getText().toString().trim());
         newUser.setMale(maleRb.isChecked());
         newUser.setCellNumber(cellNumberInputEt.getText().toString().trim());
+        newUser.setEmail(emailInputEt.getText().toString().trim());
         newUser.setAddress(addressInputEt.getText().toString().trim());
         newUser.setUniversity(universityInputEt.getText().toString().trim());
         newUser.setDepartment(departmentInputEt.getText().toString().trim());
@@ -131,13 +134,21 @@ public class EditUserInfoActivity extends BaseEditDataActivity {
             Toast.makeText(EditUserInfoActivity.this, "年龄不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
+        if (TextUtils.isEmpty(newUser.getCellNumber()) && TextUtils.isEmpty(newUser.getEmail())) {
+            Toast.makeText(EditUserInfoActivity.this, "联系方式或邮箱作为登录凭证，不能全为空", Toast.LENGTH_SHORT).show();
+            return;
+        }
         newUser.setAge(Integer.parseInt(ageStr));
 
 
         // 修改操作
+        if (UserDaoUtil.modifyUserInfo(newUser)) {
+            App.setUser(newUser);
+            Toast.makeText(EditUserInfoActivity.this, "修改资料成功", Toast.LENGTH_SHORT).show();
+            EditUserInfoActivity.this.finish();
+        } else {
+            Toast.makeText(EditUserInfoActivity.this, "修改失败", Toast.LENGTH_SHORT).show();
+        }
 
-        App.setUser(newUser);
-        Toast.makeText(EditUserInfoActivity.this, "修改资料成功", Toast.LENGTH_SHORT).show();
-        EditUserInfoActivity.this.finish();
     }
 }

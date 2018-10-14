@@ -1,13 +1,25 @@
 package com.linstick.collegeassistant.beans;
 
+
+import org.litepal.crud.DataSupport;
+
 import java.io.Serializable;
 import java.util.Date;
 
-public class Note implements Serializable {
+/**
+ * 帖子表
+ */
+public class Note extends DataSupport implements Serializable {
+
+    // 不能能够保存到SQLite中的字段
     private User publisher;
     private Module belongModule;
 
-    private int noteId;
+    // 能够保存到SQLite中的字段
+    private int publisherId;
+    private int belongModuleId;
+
+    private int id;
     private String title;
     private String content;
     private Date publishTime;
@@ -17,30 +29,12 @@ public class Note implements Serializable {
     private String address;
     private String remarks;
 
+    // 保存到SQLite中但无实际意义的字段
     private int collectCount;
     private int commentCount;
     private int likeCount;
     private boolean isLiked;
     private boolean isCollected;
-
-    public Note() {
-        this.publisher = new User();
-        this.belongModule = new Module();
-        this.title = "标题" + (int) (Math.random() * 10000);
-        this.content = "测试内容阿的说法打发大师傅撒打撒打发阿斯蒂芬方式四大非敢死队发撒打发";
-        this.publishTime = new Date();
-        this.collectCount = (int) (Math.random() * 100);
-        this.commentCount = (int) (Math.random() * 1000);
-        this.likeCount = (int) (Math.random() * 500);
-        this.isLiked = false;
-        this.isCollected = false;
-        this.startTime = new Date();
-        this.keepTime = "2个小时";
-        this.address = "广东工业大学(大学城校区)";
-        this.remarks = "记得带上1支笔和3份简历";
-
-
-    }
 
     public User getPublisher() {
         return publisher;
@@ -58,12 +52,28 @@ public class Note implements Serializable {
         this.belongModule = belongModule;
     }
 
-    public int getNoteId() {
-        return noteId;
+    public int getPublisherId() {
+        return publisherId;
     }
 
-    public void setNoteId(int noteId) {
-        this.noteId = noteId;
+    public void setPublisherId(int publisherId) {
+        this.publisherId = publisherId;
+    }
+
+    public int getBelongModuleId() {
+        return belongModuleId;
+    }
+
+    public void setBelongModuleId(int belongModuleId) {
+        this.belongModuleId = belongModuleId;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -122,6 +132,14 @@ public class Note implements Serializable {
         this.remarks = remarks;
     }
 
+    public int getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
+    }
+
     public int getCollectCount() {
         return collectCount;
     }
@@ -136,14 +154,6 @@ public class Note implements Serializable {
 
     public void setCommentCount(int commentCount) {
         this.commentCount = commentCount;
-    }
-
-    public int getLikeCount() {
-        return likeCount;
-    }
-
-    public void setLikeCount(int likeCount) {
-        this.likeCount = likeCount;
     }
 
     public boolean isLiked() {
@@ -167,7 +177,9 @@ public class Note implements Serializable {
         return "Note{" +
                 "publisher=" + publisher +
                 ", belongModule=" + belongModule +
-                ", noteId=" + noteId +
+                ", publisherId=" + publisherId +
+                ", belongModuleId=" + belongModuleId +
+                ", id=" + id +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", publishTime=" + publishTime +
@@ -175,9 +187,9 @@ public class Note implements Serializable {
                 ", keepTime='" + keepTime + '\'' +
                 ", address='" + address + '\'' +
                 ", remarks='" + remarks + '\'' +
+                ", likeCount=" + likeCount +
                 ", collectCount=" + collectCount +
                 ", commentCount=" + commentCount +
-                ", likeCount=" + likeCount +
                 ", isLiked=" + isLiked +
                 ", isCollected=" + isCollected +
                 '}';

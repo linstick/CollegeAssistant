@@ -1,7 +1,9 @@
 package com.linstick.collegeassistant.sqlite;
 
-import com.linstick.collegeassistant.litepal.Note;
-import com.linstick.collegeassistant.litepal.Relation;
+import android.util.Log;
+
+import com.linstick.collegeassistant.beans.Note;
+import com.linstick.collegeassistant.beans.Relation;
 
 import org.litepal.crud.DataSupport;
 
@@ -9,19 +11,27 @@ import java.util.List;
 
 public class RelationDaoUtil {
 
-    private static final int DEFAULT_SIZE = 20;
+    private static final String TAG = "RelationDaoUtil";
 
-    public static List<Relation> findRelationsByUserId(int userId) {
-        return findRelationsByUserId(userId, 0, DEFAULT_SIZE);
-    }
 
-    public static List<Relation> findRelationsByUserId(int userId, int fromIndex) {
-        return findRelationsByUserId(userId, fromIndex, DEFAULT_SIZE);
-    }
-
-    public static List<Relation> findRelationsByUserId(int userId, int fromIndex, int pageSize) {
-        List<Relation> list = DataSupport.where("relatedUserId = ?", userId + "").limit(pageSize).offset(fromIndex).find(Relation.class);
+    public static List<Relation> findBeforeRelationsByUserId(int userId, int lastId, int pageSize) {
+        List<Relation> list = DataSupport
+                .where("id < ? and relatedUserId = ?", lastId + "", userId + "")
+                .order("id desc")
+                .limit(pageSize)
+                .find(Relation.class);
         completeRelationData(list);
+        Log.d(TAG, "findBeforeRelationsByUserId: 来过 " + list.size());
+        return list;
+    }
+
+    public static List<Relation> findAfterRelationsByUserId(int userId, int firstId) {
+        List<Relation> list = DataSupport
+                .where("id > ? and relatedUserId = ?", firstId + "", userId + "")
+                .order("id desc")
+                .find(Relation.class);
+        completeRelationData(list);
+        Log.d(TAG, "findAfterRelationsByUserId: laiguo " + list.size());
         return list;
     }
 

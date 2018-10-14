@@ -1,6 +1,6 @@
 package com.linstick.collegeassistant.sqlite;
 
-import com.linstick.collegeassistant.litepal.Feedback;
+import com.linstick.collegeassistant.beans.Feedback;
 
 public class FeedbackDaoUtil {
 

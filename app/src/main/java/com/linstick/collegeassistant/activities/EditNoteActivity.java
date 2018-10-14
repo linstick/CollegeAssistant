@@ -12,11 +12,14 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.linstick.collegeassistant.App;
 import com.linstick.collegeassistant.R;
 import com.linstick.collegeassistant.base.BaseEditDataActivity;
-import com.linstick.collegeassistant.beans.Module;
 import com.linstick.collegeassistant.beans.Note;
+import com.linstick.collegeassistant.sqlite.NoteDaoUtil;
 import com.linstick.collegeassistant.utils.TimeFactoryUtil;
+
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -112,22 +115,25 @@ public class EditNoteActivity extends BaseEditDataActivity implements AdapterVie
             }
         }
         // 检查通过
-        Module module = new Module();
-        module.setId(position + 1);
-        module.setName(mItemList[position]);
-
         Note note = new Note();
-        note.setBelongModule(module);
+        note.setPublisherId(App.getUserId());
+        note.setBelongModuleId(position + 1);
         note.setTitle(title);
         note.setContent(content);
+        note.setPublishTime(new Date());
         if (position + 2 < count) {
             note.setStartTime(TimeFactoryUtil.stringToDateFormat(startTime));
             note.setKeepTime(keepTime);
             note.setAddress(address);
             note.setRemarks(remarks);
         }
-        Toast.makeText(EditNoteActivity.this, "发表成功", Toast.LENGTH_SHORT).show();
-        finish();
+        if (NoteDaoUtil.sendNote(note)) {
+            Toast.makeText(EditNoteActivity.this, "发表成功", Toast.LENGTH_SHORT).show();
+            finish();
+        } else {
+            Toast.makeText(EditNoteActivity.this, "发表失败", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @Override
@@ -142,6 +148,12 @@ public class EditNoteActivity extends BaseEditDataActivity implements AdapterVie
             keepTimeLayout.setVisibility(View.GONE);
             addressLayout.setVisibility(View.GONE);
             remarksLayout.setVisibility(View.GONE);
+        } else {
+            titleLayout.setVisibility(View.VISIBLE);
+            startTimeLayout.setVisibility(View.VISIBLE);
+            keepTimeLayout.setVisibility(View.VISIBLE);
+            addressLayout.setVisibility(View.VISIBLE);
+            remarksLayout.setVisibility(View.VISIBLE);
         }
         titleInputEt.setText("");
         contentInputEt.setText("");

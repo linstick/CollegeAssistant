@@ -22,11 +22,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CollectionListNoteAdapter extends BaseSwipeNoteAdapter {
+public class CollectedNotesAdapter extends BaseSwipeNoteAdapter {
 
     private OnCollectionClickListener mListener;
 
-    public CollectionListNoteAdapter(List<Note> mList) {
+    public CollectedNotesAdapter(List<Note> mList) {
         super(mList);
     }
 
@@ -108,7 +108,7 @@ public class CollectionListNoteAdapter extends BaseSwipeNoteAdapter {
             int position = (int) view.getTag();
             switch (view.getId()) {
                 case R.id.ll_item_layout:
-                    mListener.onCollectionClick(position);
+                    mListener.onCollectedItemClick(position);
                     break;
                 case R.id.tv_cancel_collect:
                     mListener.onCancelCollectClick(position);

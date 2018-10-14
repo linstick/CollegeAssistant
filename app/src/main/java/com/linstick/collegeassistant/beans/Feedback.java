@@ -1,15 +1,31 @@
 package com.linstick.collegeassistant.beans;
 
+import org.litepal.crud.DataSupport;
+
+import java.io.Serializable;
 import java.util.Date;
 
-public class Feedback {
-    private String content;
+public class Feedback extends DataSupport implements Serializable {
     private User sender;
+
+    private int userId;
+    private String content;
     private Date sendTime;
 
-    public Feedback() {
-        this.sender = new User();
-        this.sendTime = new Date();
+    public User getSender() {
+        return sender;
+    }
+
+    public void setSender(User sender) {
+        this.sender = sender;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getContent() {
@@ -18,14 +34,6 @@ public class Feedback {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public User getSender() {
-        return sender;
-    }
-
-    public void setSender(User sender) {
-        this.sender = sender;
     }
 
     public Date getSendTime() {
@@ -39,8 +47,9 @@ public class Feedback {
     @Override
     public String toString() {
         return "Feedback{" +
-                "content='" + content + '\'' +
-                ", sender=" + sender +
+                "sender=" + sender +
+                ", userId=" + userId +
+                ", content='" + content + '\'' +
                 ", sendTime=" + sendTime +
                 '}';
     }

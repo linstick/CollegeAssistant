@@ -18,13 +18,13 @@ import com.linstick.collegeassistant.activities.NoteDetailActivity;
 import com.linstick.collegeassistant.activities.UserInfoActivity;
 import com.linstick.collegeassistant.adapters.NoteListAdapter;
 import com.linstick.collegeassistant.adapters.listeners.OnNoteListPartialClickListener;
+import com.linstick.collegeassistant.beans.Collection;
+import com.linstick.collegeassistant.beans.Like;
 import com.linstick.collegeassistant.beans.Note;
-import com.linstick.collegeassistant.callbacks.LoadDataCallBack;
-import com.linstick.collegeassistant.events.LoadDataEvent;
+import com.linstick.collegeassistant.beans.User;
+import com.linstick.collegeassistant.callbacks.SwipeLoadDataCallback;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,60 +32,25 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public abstract class BaseSwipeNoteFragment extends Fragment implements OnNoteListPartialClickListener {
-
-    protected NoteListAdapter mAdapter;
+public abstract class BaseSwipeNoteFragment extends Fragment implements
+        OnNoteListPartialClickListener, SwipeLoadDataCallback<Note> {
+    private static final String TAG = "BaseSwipeNoteFragment";
+    protected List<Note> mList;
+    protected BaseSwipeNoteAdapter mAdapter;
+    protected User mUser;
+    protected int pageSize = 20;
     @BindView(R.id.rv_note_list)
     RecyclerView noteListRv;
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout refreshLayout;
-    private List<Note> mList;
     private LinearLayoutManager mLayoutManager;
     private boolean isLoadingMore;
     private boolean hasMore = true;
 
-    private LoadDataCallBack<Note> refreshCallBack = new LoadDataCallBack<Note>() {
-        @Override
-        public void onSuccess(List<Note> list) {
-            mList.addAll(0, list);
-            EventBus.getDefault().post(LoadDataEvent.REFRESH_SUCCESS);
-        }
-
-        @Override
-        public void onSuccessEmpty() {
-            EventBus.getDefault().post(LoadDataEvent.REFRESH_SUCCESS);
-        }
-
-        @Override
-        public void onFail(String error) {
-            EventBus.getDefault().post(LoadDataEvent.REFRESH_FAIL);
-        }
-    };
-
-    private LoadDataCallBack<Note> loadMoreCallBack = new LoadDataCallBack<Note>() {
-        @Override
-        public void onSuccess(List<Note> list) {
-            mList.addAll(list);
-            EventBus.getDefault().post(LoadDataEvent.LOAD_MORE_SUCCESS);
-        }
-
-        @Override
-        public void onSuccessEmpty() {
-            EventBus.getDefault().post(LoadDataEvent.LOAD_MORE_SUCCESS_EMPTY);
-        }
-
-        @Override
-        public void onFail(String error) {
-            EventBus.getDefault().post(LoadDataEvent.LOAD_MORE_FAIL);
-        }
-    };
-
-    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mList = new ArrayList<>();
         mAdapter = new NoteListAdapter(mList);
-        EventBus.getDefault().register(this);
     }
 
     @Nullable
@@ -93,7 +58,9 @@ public abstract class BaseSwipeNoteFragment extends Fragment implements OnNoteLi
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.base_fragment_note, null);
         ButterKnife.bind(this, view);
-        mAdapter.setOnNoteListPartialClickListener(this);
+        if (mAdapter instanceof NoteListAdapter) {
+            ((NoteListAdapter) mAdapter).setOnNoteListPartialClickListener(this);
+        }
         noteListRv.setAdapter(mAdapter);
         mLayoutManager = new LinearLayoutManager(getContext());
         noteListRv.setLayoutManager(mLayoutManager);
@@ -109,7 +76,7 @@ public abstract class BaseSwipeNoteFragment extends Fragment implements OnNoteLi
                 int position = mLayoutManager.findLastVisibleItemPosition();
                 if (!isLoadingMore && hasMore && position + 3 > mList.size()) {
                     isLoadingMore = true;
-                    loadMoreData(loadMoreCallBack);
+                    loadMoreData(BaseSwipeNoteFragment.this);
                 }
             }
         });
@@ -118,33 +85,23 @@ public abstract class BaseSwipeNoteFragment extends Fragment implements OnNoteLi
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refreshData(refreshCallBack);
+                refreshData(BaseSwipeNoteFragment.this);
             }
         });
-        if (mList.size() == 0) {
-            refreshLayout.setRefreshing(true);
-            isLoadingMore = true;
-            loadMoreData(loadMoreCallBack);
-        }
         return view;
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        // 登录状态改变或者初次加载
+        if (App.getUser() != mUser || mList.size() == 0) {
+            reLoadData();
+        }
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
-    }
-
+    // -------------------正常帖子列表点击事件回调------------------------------------
     @Override
     public void onUserInfoClick(int position) {
         // 查看用户信息
@@ -173,9 +130,12 @@ public abstract class BaseSwipeNoteFragment extends Fragment implements OnNoteLi
         int likeCount = note.getLikeCount();
         if (note.isLiked()) {
             note.setLikeCount(likeCount + 1);
+            new Like(App.getUserId(), note.getId()).save();
         } else {
             note.setLikeCount(likeCount - 1);
+            DataSupport.deleteAll(Like.class, "likerId = ? and belongNoteId = ?", App.getUserId() + "", note.getId() + "");
         }
+
         NoteListAdapter.OrdinaryViewHolder viewHolder = (NoteListAdapter.OrdinaryViewHolder) noteListRv.findViewHolderForAdapterPosition(position);
         viewHolder.likeIv.setImageResource(note.isLiked() ? R.drawable.ic_like_orange : R.drawable.ic_like_gray);
         viewHolder.likeCountTv.setText(note.getLikeCount() + "");
@@ -184,10 +144,6 @@ public abstract class BaseSwipeNoteFragment extends Fragment implements OnNoteLi
     @Override
     public void onNoteItemClick(int position) {
         // 跳转到帖子详情界面
-        if (App.getUser() == null) {
-            Toast.makeText(getContext(), "请先登录", Toast.LENGTH_SHORT).show();
-            return;
-        }
         NoteDetailActivity.startAction(getContext(), mList.get(position));
     }
 
@@ -203,52 +159,81 @@ public abstract class BaseSwipeNoteFragment extends Fragment implements OnNoteLi
         int collectCount = note.getCollectCount();
         if (note.isCollected()) {
             note.setCollectCount(collectCount + 1);
+            new Collection(App.getUserId(), note.getId()).save();
             Toast.makeText(getActivity(), "收藏成功", Toast.LENGTH_SHORT).show();
         } else {
             note.setCollectCount(collectCount - 1);
+            DataSupport.deleteAll(Collection.class, "collectorId = ? and belongNoteId = ?", App.getUserId() + "", note.getId() + "");
         }
+
         NoteListAdapter.OrdinaryViewHolder viewHolder = (NoteListAdapter.OrdinaryViewHolder) noteListRv.findViewHolderForAdapterPosition(position);
         viewHolder.collectIv.setImageResource(note.isCollected() ? R.drawable.ic_star_orange : R.drawable.ic_star_gray);
         viewHolder.collectCountTv.setText(note.getCollectCount() + "");
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onStopLoadData(LoadDataEvent event) {
+    // =========================================================================
+
+
+    // 下拉刷新事件回调
+    @Override
+    public void onRefreshCallback(List<Note> result) {
         refreshLayout.setRefreshing(false);
-        switch (event) {
-            case REFRESH_SUCCESS:
-                mAdapter.notifyDataSetChanged();
-                noteListRv.smoothScrollToPosition(0);
-                break;
-
-            case REFRESH_SUCCESS_EMPTY:
-                Toast.makeText(getContext(), "暂时无更多新数据了", Toast.LENGTH_SHORT).show();
-                break;
-
-            case REFRESH_FAIL:
-                Toast.makeText(getContext(), "更新失败，请求检查网络或稍后再试", Toast.LENGTH_SHORT).show();
-                break;
-
-            case LOAD_MORE_SUCCESS:
-                isLoadingMore = false;
-                mAdapter.notifyDataSetChanged();
-                break;
-            case LOAD_MORE_SUCCESS_EMPTY:
-                isLoadingMore = false;
-                hasMore = false;
-                mAdapter.setHasMore(hasMore);
-                mAdapter.notifyDataSetChanged();
-                break;
-            case LOAD_MORE_FAIL:
-                isLoadingMore = false;
-                Toast.makeText(getContext(), "加载失败，请求检查网络或稍后再试", Toast.LENGTH_SHORT).show();
-                break;
+        if (result == null) {
+            Toast.makeText(getContext(), "更新失败，请求检查网络或稍后再试", Toast.LENGTH_SHORT).show();
+        } else if (result.size() == 0) {
+            Toast.makeText(getContext(), "暂时没有新内容喔", Toast.LENGTH_SHORT).show();
+        } else {
+            mList.addAll(0, result);
+            mAdapter.notifyDataSetChanged();
+            noteListRv.smoothScrollToPosition(0);
         }
     }
 
-    public abstract String getTitle();
+    // 上拉加载更多事件回调
+    @Override
+    public void onLoadMoreCallback(List<Note> result) {
+        refreshLayout.setRefreshing(false);
+        if (result == null) {
+            isLoadingMore = false;
+            Toast.makeText(getContext(), "加载失败，请求检查网络或稍后再试", Toast.LENGTH_SHORT).show();
+        } else {
+            mList.addAll(result);
+            isLoadingMore = false;
+            mAdapter.notifyDataSetChanged();
+            if (result.size() < pageSize) {
+                hasMore = false;
+                mAdapter.setHasMore(hasMore);
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+    }
 
-    public abstract void refreshData(LoadDataCallBack callBack);
+    public void reLoadData() {
+        mList.clear();
+        mAdapter.notifyDataSetChanged();
+        mUser = App.getUser();
+        refreshLayout.setRefreshing(true);
+        isLoadingMore = true;
+        loadMoreData(this);
+    }
 
-    public abstract void loadMoreData(LoadDataCallBack callBack);
+    protected int getFirstItemId() {
+        return (mList != null && mList.size() > 0) ? mList.get(0).getId() : -1;
+    }
+
+    protected int getLastItemId() {
+        return (mList != null && mList.size() > 0) ? mList.get(mList.size() - 1).getId() : Integer.MAX_VALUE;
+    }
+
+    public String getTitle() {
+        return "";
+    }
+
+    public int getModuleId() {
+        return -1;
+    }
+
+    public abstract void refreshData(SwipeLoadDataCallback<Note> callBack);
+
+    public abstract void loadMoreData(SwipeLoadDataCallback<Note> callBack);
 }

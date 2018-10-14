@@ -16,6 +16,7 @@ import com.linstick.collegeassistant.fragments.LoginFragment;
 import com.linstick.collegeassistant.fragments.RegisterFragment;
 import com.linstick.collegeassistant.fragments.listeners.LoginFragmentClickListener;
 import com.linstick.collegeassistant.fragments.listeners.RegisterFragmentClickListener;
+import com.linstick.collegeassistant.sqlite.UserDaoUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,9 +58,15 @@ public class LoginActivity extends BaseActivity implements LoginFragmentClickLis
             return;
         }
         // 登录操作
-        App.setUser(new User());
-        Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
-        LoginActivity.this.finish();
+        User user = UserDaoUtil.loginVerify(account, password);
+        if (user == null) {
+            App.setUser(null);
+            Toast.makeText(LoginActivity.this, "登录失败，用户名或密码不正确", Toast.LENGTH_SHORT).show();
+        } else {
+            App.setUser(user);
+            Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+            LoginActivity.this.finish();
+        }
     }
 
     @Override
@@ -96,13 +103,17 @@ public class LoginActivity extends BaseActivity implements LoginFragmentClickLis
             return;
         }
         // 注册操作
+        User user = UserDaoUtil.registerVerify(account, nickname, password);
+        if (user != null) {
+            Toast.makeText(LoginActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
+            // 注册完成了顺便登录
+            App.setUser(user);
+            LoginActivity.this.finish();
+        } else {
+            Toast.makeText(LoginActivity.this, "注册失败", Toast.LENGTH_SHORT).show();
 
-        Toast.makeText(LoginActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
-        // 注册完成了顺便登录
-        User user = new User();
-        user.setNickName(nickname);
-        App.setUser(user);
-        LoginActivity.this.finish();
+        }
+
     }
 
     @Override

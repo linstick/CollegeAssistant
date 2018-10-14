@@ -10,9 +10,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.linstick.collegeassistant.App;
 import com.linstick.collegeassistant.R;
 import com.linstick.collegeassistant.base.BaseActivity;
 import com.linstick.collegeassistant.beans.Feedback;
+import com.linstick.collegeassistant.sqlite.FeedbackDaoUtil;
+
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,10 +43,17 @@ public class FeedBackActivity extends BaseActivity {
                 }
                 feedbackLayout.requestFocus();
                 // 发送反馈操作
-                Feedback info = new Feedback();
-                info.setContent(content);
-                feedbackLayout.setVisibility(View.GONE);
-                feedbackResultLayout.setVisibility(View.VISIBLE);
+                Feedback feedback = new Feedback();
+                feedback.setContent(content);
+                feedback.setSendTime(new Date());
+                feedback.setUserId(App.getUserId());
+                if (FeedbackDaoUtil.feedback(feedback)) {
+                    feedbackLayout.setVisibility(View.GONE);
+                    feedbackResultLayout.setVisibility(View.VISIBLE);
+                } else {
+                    Toast.makeText(FeedBackActivity.this, "反馈失败", Toast.LENGTH_SHORT).show();
+                }
+
                 break;
         }
     }

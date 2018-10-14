@@ -7,12 +7,13 @@ import android.util.Log;
 import android.view.View;
 
 import com.linstick.collegeassistant.R;
-import com.linstick.collegeassistant.litepal.Collection;
-import com.linstick.collegeassistant.litepal.Comment;
-import com.linstick.collegeassistant.litepal.Module;
-import com.linstick.collegeassistant.litepal.Note;
-import com.linstick.collegeassistant.litepal.Relation;
-import com.linstick.collegeassistant.litepal.User;
+import com.linstick.collegeassistant.beans.Collection;
+import com.linstick.collegeassistant.beans.Comment;
+import com.linstick.collegeassistant.beans.Like;
+import com.linstick.collegeassistant.beans.Module;
+import com.linstick.collegeassistant.beans.Note;
+import com.linstick.collegeassistant.beans.Relation;
+import com.linstick.collegeassistant.beans.User;
 import com.linstick.collegeassistant.sqlite.CommentDaoUtil;
 import com.linstick.collegeassistant.sqlite.NoteDaoUtil;
 import com.linstick.collegeassistant.sqlite.RelationDaoUtil;
@@ -73,6 +74,7 @@ public class TestActivity extends AppCompatActivity {
         insertCommentData();
         insertCollectionData();
         insertRelationData();
+        insertLikeData();
     }
 
     private void insertModuleData() {
@@ -138,6 +140,42 @@ public class TestActivity extends AppCompatActivity {
         user1.setRegisterTime(new Date());
         user1.setPassword("PSC213903");
         user1.save();
+
+        User user2 = new User();
+        user2.setIconUrl("https://www.tencent.com");
+        user2.setNickName("小花");
+        user2.setRealName("甄子明");
+        user2.setAge(32);
+        user2.setMale(true);
+        user2.setCellNumber("15763426678");
+        user2.setEmail("zzm@163.com");
+        user2.setAddress("广东省广州市天河区黄村大道");
+        user2.setUniversity("中山大学");
+        user2.setDepartment("软件学院");
+        user2.setMajor("软件工程");
+        user2.setKlazz("12级");
+        user2.setDescription("C++游戏开发");
+        user2.setRegisterTime(new Date());
+        user2.setPassword("PSC213903");
+        user2.save();
+
+        User user3 = new User();
+        user3.setIconUrl("https://www.alibaba.com");
+        user3.setNickName("路人甲");
+        user3.setRealName("周洁莹");
+        user3.setAge(29);
+        user3.setMale(false);
+        user3.setCellNumber("18132409834");
+        user3.setEmail("admin");
+        user3.setAddress("广东省广州市天河区黄村大道");
+        user3.setUniversity("广州大学");
+        user3.setDepartment("计算甲学院");
+        user3.setMajor("计算机科学与技术");
+        user3.setKlazz("15级");
+        user3.setDescription("IOS开发");
+        user3.setRegisterTime(new Date());
+        user3.setPassword("admin");
+        user3.save();
     }
 
     private void insertNoteData() {
@@ -165,6 +203,54 @@ public class TestActivity extends AppCompatActivity {
         note1.setLikeCount(0);
         note1.setRemarks("带上1支笔和1份简历");
         note1.save();
+
+        Note note2 = new Note();
+        note2.setTitle("触宝秋招宣讲会");
+        note2.setContent("触宝秋招已正式启动,广州站线下宣讲+笔试");
+        note2.setAddress("广州大学(大学城校区) 教5-103");
+        note2.setBelongModuleId(1);
+        note2.setPublisherId(2);
+        note2.setPublishTime(new Date());
+        note2.setStartTime(new Date());
+        note2.setKeepTime("2小时");
+        note2.setRemarks("带上1支笔和1份简历");
+        note2.save();
+
+        Note note3 = new Note();
+        note3.setTitle("腾讯秋招宣讲会");
+        note3.setContent("腾讯秋招已正式启动,深圳站线下宣讲+笔试");
+        note3.setAddress("中山大学(大学城校区) 教5-103");
+        note3.setBelongModuleId(1);
+        note3.setPublisherId(1);
+        note3.setPublishTime(new Date());
+        note3.setStartTime(new Date());
+        note3.setKeepTime("2.5小时");
+        note3.setRemarks("带上1支笔和1份简历");
+        note3.save();
+
+        Note note4 = new Note();
+        note4.setTitle("阿里巴巴秋招宣讲会");
+        note4.setContent("阿里巴巴秋招已正式启动,杭州线下宣讲+笔试，欢迎有兴趣的2019届学生可到现场参加");
+        note4.setAddress("浙江大学 教3-209");
+        note4.setBelongModuleId(1);
+        note4.setPublisherId(1);
+        note4.setPublishTime(new Date());
+        note4.setStartTime(new Date());
+        note4.setKeepTime("3小时");
+        note4.setRemarks("带上1支笔和2份简历");
+        note4.save();
+
+        Note note5 = new Note();
+        note5.setTitle("百度秋招宣讲会");
+        note5.setContent("百度秋招已正式启动,杭州线下宣讲+笔试");
+        note5.setAddress("华南理工大学(大学城校区) 教1-402");
+        note5.setBelongModuleId(1);
+        note5.setPublisherId(1);
+        note5.setPublishTime(new Date());
+        note5.setStartTime(new Date());
+        note5.setKeepTime("3小时");
+        note5.setRemarks("带上1支笔和2份简历");
+        note5.save();
     }
 
     private void insertCommentData() {
@@ -241,8 +327,25 @@ public class TestActivity extends AppCompatActivity {
         relation3.save();
     }
 
+    private void insertLikeData() {
+        Like like = new Like();
+        like.setLikerId(1);
+        like.setBelongNoteId(1);
+        like.save();
+
+        Like like1 = new Like();
+        like1.setLikerId(2);
+        like1.setBelongNoteId(1);
+        like1.save();
+
+        Like like2 = new Like();
+        like2.setLikerId(2);
+        like2.setBelongNoteId(2);
+        like2.save();
+    }
+
     private void queryNote() {
-        List<Note> list = NoteDaoUtil.findCollectedNotesForUser(1);
+        List<Note> list = NoteDaoUtil.findAfterNotesByKeyword(1, -1, "宣讲会");
         for (Note item : list) {
             Log.d(TAG, "query3: " + item);
         }
@@ -263,7 +366,7 @@ public class TestActivity extends AppCompatActivity {
     }
 
     private void queryRelation() {
-        List<Relation> list = RelationDaoUtil.findRelationsByUserId(2);
+        List<Relation> list = RelationDaoUtil.findAfterRelationsByUserId(2, -1);
         for (Relation item : list) {
             Log.d(TAG, "queryRelation: " + item);
         }

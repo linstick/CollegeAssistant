@@ -2,90 +2,30 @@ package com.linstick.collegeassistant.activities;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 
-import com.linstick.collegeassistant.adapters.CollectionListNoteAdapter;
-import com.linstick.collegeassistant.adapters.listeners.OnCollectionClickListener;
-import com.linstick.collegeassistant.base.BaseSwipeNoteActivity;
-import com.linstick.collegeassistant.beans.Note;
-import com.linstick.collegeassistant.callbacks.LoadDataCallBack;
+import com.linstick.collegeassistant.R;
+import com.linstick.collegeassistant.base.BaseActivity;
+import com.linstick.collegeassistant.fragments.CollectedNotesSwipeFragment;
 
-import java.util.ArrayList;
-import java.util.List;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-public class CollectionsActivity extends BaseSwipeNoteActivity implements OnCollectionClickListener {
+public class CollectionsActivity extends BaseActivity {
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
+    private CollectedNotesSwipeFragment mFragment;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.mList = new ArrayList<>();
-        CollectionListNoteAdapter mAdapter = new CollectionListNoteAdapter(mList);
-        mAdapter.setOnCollectionClickListener(this);
-        super.mAdapter = mAdapter;
+        setContentView(R.layout.activity_search);
+        ButterKnife.bind(this);
+
+        super.toolbar = toolbar;
         super.onCreate(savedInstanceState);
-    }
 
-    @Override
-    public void refreshData(final LoadDataCallBack callBack) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    // 模拟耗时操作
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                // 获取数据
-                List<Note> result = new ArrayList<>();
-                for (int i = 0; i < 5; i++) {
-                    result.add(new Note());
-                }
-                // 对数据结果继续判断
-                if (result == null) {
-                    callBack.onFail("加载失败");
-                } else if (result.size() == 0) {
-                    callBack.onSuccessEmpty();
-                } else {
-                    callBack.onSuccess(result);
-                }
-            }
-        }).start();
-    }
-
-    @Override
-    public void loadMoreData(final LoadDataCallBack callBack) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    // 模拟耗时操作
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                // 获取数据
-                List<Note> result = new ArrayList<>();
-                for (int i = 0; i < 5; i++) {
-                    result.add(new Note());
-                }
-                // 对数据结果继续判断
-                if (result == null) {
-                    callBack.onFail("加载失败");
-                } else if (result.size() == 0) {
-                    callBack.onSuccessEmpty();
-                } else {
-                    callBack.onSuccess(result);
-                }
-            }
-        }).start();
-    }
-
-    @Override
-    public void onCollectionClick(int position) {
-        NoteDetailActivity.startAction(CollectionsActivity.this, mList.get(position));
-    }
-
-    @Override
-    public void onCancelCollectClick(int position) {
-        mList.remove(position);
-        mAdapter.notifyDataSetChanged();
+        mFragment = new CollectedNotesSwipeFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mFragment).commit();
     }
 }

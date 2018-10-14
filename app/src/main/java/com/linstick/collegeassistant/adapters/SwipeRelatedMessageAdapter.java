@@ -52,18 +52,18 @@ public class SwipeRelatedMessageAdapter extends BaseSwipeAdapter {
             builder.append(message.getSender().getNickName());
             builder.append(" ");
             switch (message.getType()) {
-                case Relation.TYPE_COLLECT:
+                case Relation.TYPE_COMMENT:
                     builder.append("在标题为“");
                     builder.append(message.getRelatedNote().getTitle());
                     builder.append("”的帖子中回复了你：");
                     builder.append(message.getContent());
                     break;
-                case Relation.TYPE_COMMENT:
+                case Relation.TYPE_LIKE:
                     builder.append("点赞了标题为“");
                     builder.append(message.getRelatedNote().getTitle());
                     builder.append("”的帖子");
                     break;
-                case Relation.TYPE_LIKE:
+                case Relation.TYPE_COLLECT:
                     builder.append("收藏了标题为“");
                     builder.append(message.getRelatedNote().getTitle());
                     builder.append("”的帖子");

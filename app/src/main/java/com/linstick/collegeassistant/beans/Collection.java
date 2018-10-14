@@ -1,4 +1,4 @@
-package com.linstick.collegeassistant.litepal;
+package com.linstick.collegeassistant.beans;
 
 import org.litepal.crud.DataSupport;
 
@@ -9,8 +9,16 @@ import java.io.Serializable;
  */
 public class Collection extends DataSupport implements Serializable {
 
-    private int belongNoteId;
     private int collectorId;
+    private int belongNoteId;
+
+    public Collection() {
+    }
+
+    public Collection(int collectorId, int belongNoteId) {
+        this.collectorId = collectorId;
+        this.belongNoteId = belongNoteId;
+    }
 
     public int getBelongNoteId() {
         return belongNoteId;

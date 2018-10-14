@@ -1,25 +1,44 @@
 package com.linstick.collegeassistant.beans;
 
+import org.litepal.crud.DataSupport;
+
+import java.io.Serializable;
 import java.util.Date;
 
-public class Relation {
+/**
+ * 动态 关系表
+ */
+public class Relation extends DataSupport implements Serializable {
 
     public final static int TYPE_COLLECT = 1;
     public final static int TYPE_COMMENT = 2;
     public final static int TYPE_LIKE = 3;
 
-    private User sender;
     private Note relatedNote;
+    private User sender;
+
+    private int id;
+    private int relatedNoteId;
+    private int relatedUserId;
+    private int senderId;
     private int type;
     private String content;
     private Date sendTime;
 
-    public Relation() {
-        this.sender = new User();
-        this.relatedNote = new Note();
-        this.type = (int) (Math.random() * 100) % 3 + 1;
-        this.content = "我知道这是什么" + (int) (Math.random() * 1000);
-        this.sendTime = new Date();
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Note getRelatedNote() {
+        return relatedNote;
+    }
+
+    public void setRelatedNote(Note relatedNote) {
+        this.relatedNote = relatedNote;
     }
 
     public User getSender() {
@@ -30,12 +49,28 @@ public class Relation {
         this.sender = sender;
     }
 
-    public Note getRelatedNote() {
-        return relatedNote;
+    public int getRelatedUserId() {
+        return relatedUserId;
     }
 
-    public void setRelatedNote(Note relatedNote) {
-        this.relatedNote = relatedNote;
+    public void setRelatedUserId(int relatedUserId) {
+        this.relatedUserId = relatedUserId;
+    }
+
+    public int getRelatedNoteId() {
+        return relatedNoteId;
+    }
+
+    public void setRelatedNoteId(int relatedNoteId) {
+        this.relatedNoteId = relatedNoteId;
+    }
+
+    public int getSenderId() {
+        return senderId;
+    }
+
+    public void setSenderId(int senderId) {
+        this.senderId = senderId;
     }
 
     public int getType() {
@@ -62,11 +97,16 @@ public class Relation {
         this.sendTime = sendTime;
     }
 
+
     @Override
     public String toString() {
         return "Relation{" +
-                "sender=" + sender +
-                ", relatedNote=" + relatedNote +
+                "relatedNote=" + relatedNote +
+                ", sender=" + sender +
+                ", id=" + id +
+                ", relatedNoteId=" + relatedNoteId +
+                ", relatedUserId=" + relatedUserId +
+                ", senderId=" + senderId +
                 ", type=" + type +
                 ", content='" + content + '\'' +
                 ", sendTime=" + sendTime +

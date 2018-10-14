@@ -28,6 +28,7 @@ public abstract class BaseSwipeNoteActivity extends BaseActivity {
     public RecyclerView noteListRv;
     protected List<Note> mList;
     protected BaseSwipeNoteAdapter mAdapter;
+    protected int pageSize = 20;
     protected LoadDataCallBack<Note> refreshCallBack = new LoadDataCallBack<Note>() {
         @Override
         public void onSuccess(List<Note> list) {
@@ -156,6 +157,14 @@ public abstract class BaseSwipeNoteActivity extends BaseActivity {
                 Toast.makeText(this, "加载失败，请求检查网络或稍后再试", Toast.LENGTH_SHORT).show();
                 break;
         }
+    }
+
+    protected int getFirstItemId() {
+        return (mList != null && mList.size() > 0) ? mList.get(0).getId() : -1;
+    }
+
+    protected int getLastItemId() {
+        return (mList != null && mList.size() > 0) ? mList.get(mList.size() - 1).getId() : Integer.MAX_VALUE;
     }
 
     public abstract void refreshData(LoadDataCallBack callBack);

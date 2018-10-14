@@ -108,7 +108,7 @@ public class PersonalRelatedNoteAdapter extends BaseSwipeNoteAdapter {
             int position = (int) view.getTag();
             switch (view.getId()) {
                 case R.id.ll_item_layout:
-                    mListener.onCollectionClick(position);
+                    mListener.onCollectedItemClick(position);
                     break;
                 case R.id.tv_delete:
                     mListener.onCancelCollectClick(position);

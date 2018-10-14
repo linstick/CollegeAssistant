@@ -38,6 +38,7 @@
         android:layout_below="@+id/iv_user_icon"
         android:layout_marginRight="10dp"
         android:layout_marginTop="2dp"
+        android:paddingBottom="10dp"
         android:text="测试内容测试内容撒打发撒打发啊打发都是法师打发打发撒打发撒打发撒打发测试内容测试尼大厦法定待发送地方的飞洒日尔测试尼日尔阿斯顿发打的费撒打发阿斯顿发"
         android:textColor="#777777"
         android:textSize="14sp" />
@@ -46,7 +47,6 @@
         android:id="@+id/view_divide_line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@+id/tv_comment"
-        android:layout_marginTop="10dp"
+        android:layout_alignParentBottom="true"
         android:background="#DDDDDD" />
 </RelativeLayout>

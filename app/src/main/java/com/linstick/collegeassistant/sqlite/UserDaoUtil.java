@@ -1,6 +1,6 @@
 package com.linstick.collegeassistant.sqlite;
 
-import com.linstick.collegeassistant.litepal.User;
+import com.linstick.collegeassistant.beans.User;
 
 import org.litepal.crud.DataSupport;
 

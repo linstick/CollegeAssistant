@@ -1,8 +1,6 @@
 package com.linstick.collegeassistant.activities;
 
 import android.app.AlertDialog;
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,14 +26,15 @@ import com.linstick.collegeassistant.R;
 import com.linstick.collegeassistant.adapters.ViewPagerAdapter;
 import com.linstick.collegeassistant.base.BaseActivity;
 import com.linstick.collegeassistant.base.BaseSwipeNoteFragment;
-import com.linstick.collegeassistant.fragments.AllNotesSwipeNoteFragment;
-import com.linstick.collegeassistant.fragments.CampusTalkSwipeNoteFragment;
-import com.linstick.collegeassistant.fragments.ClubNoteSwipeNoteFragment;
-import com.linstick.collegeassistant.fragments.LectureNoteSwipeNoteFragment;
-import com.linstick.collegeassistant.fragments.LifeNoteSwipeNoteFragment;
-import com.linstick.collegeassistant.fragments.OtherNoteSwipeNoteFragment;
-import com.linstick.collegeassistant.fragments.SportNoteSwipeNoteFragment;
+import com.linstick.collegeassistant.fragments.AllNotesSwipeFragment;
+import com.linstick.collegeassistant.fragments.CampusTalkSwipeFragment;
+import com.linstick.collegeassistant.fragments.ClubNoteSwipeFragment;
+import com.linstick.collegeassistant.fragments.LectureNotesSwipeFragment;
+import com.linstick.collegeassistant.fragments.LifeNotesSwipeFragment;
+import com.linstick.collegeassistant.fragments.OtherNoteSwipeFragment;
+import com.linstick.collegeassistant.fragments.SportNoteSwipeFragment;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +43,7 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity implements
         NavigationView.OnNavigationItemSelectedListener {
+    private static final String TAG = "MainActivity";
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -88,36 +88,54 @@ public class MainActivity extends BaseActivity implements
 
     private void initFragment() {
         mFragmentList = new ArrayList<>();
-        mFragmentList.add(new AllNotesSwipeNoteFragment());
-        mFragmentList.add(new ClubNoteSwipeNoteFragment());
-        mFragmentList.add(new LectureNoteSwipeNoteFragment());
-        mFragmentList.add(new CampusTalkSwipeNoteFragment());
-        mFragmentList.add(new SportNoteSwipeNoteFragment());
-        mFragmentList.add(new LifeNoteSwipeNoteFragment());
-        mFragmentList.add(new OtherNoteSwipeNoteFragment());
+        mFragmentList.add(new AllNotesSwipeFragment());
+        mFragmentList.add(new ClubNoteSwipeFragment());
+        mFragmentList.add(new LectureNotesSwipeFragment());
+        mFragmentList.add(new CampusTalkSwipeFragment());
+        mFragmentList.add(new SportNoteSwipeFragment());
+        mFragmentList.add(new LifeNotesSwipeFragment());
+        mFragmentList.add(new OtherNoteSwipeFragment());
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        viewPager.setOffscreenPageLimit(1);
         viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager(), mFragmentList));
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        SearchManager searchManager =
-                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView =
-                (SearchView) menu.findItem(R.id.menu_search).getActionView();
-        searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getComponentName()));
+        final SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+        final SearchView.SearchAutoComplete autoCompleteView = searchView.findViewById(R.id.search_src_text);
+        autoCompleteView.setHint("搜索帖子...");
+        autoCompleteView.setTextSize(17);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                try {
+                    autoCompleteView.setText("");
+                    //利用反射调用收起SearchView的onCloseClicked()方法
+                    Method method = searchView.getClass().getDeclaredMethod("onCloseClicked");
+                    method.setAccessible(true);
+                    method.invoke(searchView);
+                    searchView.clearFocus();
+                    SearchActivity.startAction(MainActivity.this, query);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return true;
+            }
+        });
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_search:
-                startActivity(new Intent(MainActivity.this, SearchActivity.class));
-                break;
 
             case R.id.menu_edit:
                 if (App.getUser() == null) {
@@ -221,8 +239,9 @@ public class MainActivity extends BaseActivity implements
                 break;
 
             case R.id.menu_log_out:
-                Toast.makeText(MainActivity.this, "已退出登录", Toast.LENGTH_SHORT).show();
                 App.setUser(null);
+                mFragmentList.get(viewPager.getCurrentItem()).reLoadData();
+                Toast.makeText(MainActivity.this, "已退出登录", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.menu_log_in:

@@ -3,12 +3,13 @@
     <dbname value="CollegeAssistant"></dbname>
     <version value="1"></version>
     <list>
-        <mapping class="com.linstick.collegeassistant.litepal.User"></mapping>
-        <mapping class="com.linstick.collegeassistant.litepal.Note"></mapping>
-        <mapping class="com.linstick.collegeassistant.litepal.Module"></mapping>
-        <mapping class="com.linstick.collegeassistant.litepal.Comment"></mapping>
-        <mapping class="com.linstick.collegeassistant.litepal.Collection"></mapping>
-        <mapping class="com.linstick.collegeassistant.litepal.Relation"></mapping>
-        <mapping class="com.linstick.collegeassistant.litepal.Feedback"></mapping>
+        <mapping class="com.linstick.collegeassistant.beans.User"></mapping>
+        <mapping class="com.linstick.collegeassistant.beans.Note"></mapping>
+        <mapping class="com.linstick.collegeassistant.beans.Module"></mapping>
+        <mapping class="com.linstick.collegeassistant.beans.Comment"></mapping>
+        <mapping class="com.linstick.collegeassistant.beans.Collection"></mapping>
+        <mapping class="com.linstick.collegeassistant.beans.Like"></mapping>
+        <mapping class="com.linstick.collegeassistant.beans.Relation"></mapping>
+        <mapping class="com.linstick.collegeassistant.beans.Feedback"></mapping>
     </list>
 </litepal>

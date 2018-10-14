@@ -1,18 +1,17 @@
 package com.linstick.collegeassistant.beans;
 
+import org.litepal.crud.DataSupport;
+
 import java.io.Serializable;
 
-public class Module implements Serializable {
+public class Module extends DataSupport implements Serializable {
     public final static String[] MODULE_LIST = new String[]{
             "企业宣讲会", "社团活动", "高校讲座", "体育活动", "校园生活", "其他活动"
     };
+
     private int id;
     private String name;
-
-    public Module() {
-        this.id = (int) (Math.random() * 1000) % MODULE_LIST.length;
-        this.name = Module.MODULE_LIST[id];
-    }
+    private String simpleName;
 
     public int getId() {
         return id;
@@ -30,11 +29,20 @@ public class Module implements Serializable {
         this.name = name;
     }
 
+    public String getSimpleName() {
+        return simpleName;
+    }
+
+    public void setSimpleName(String simpleName) {
+        this.simpleName = simpleName;
+    }
+
     @Override
     public String toString() {
         return "Module{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", simpleName='" + simpleName + '\'' +
                 '}';
     }
 }

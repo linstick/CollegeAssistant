@@ -8,8 +8,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.linstick.collegeassistant.App;
 import com.linstick.collegeassistant.R;
 import com.linstick.collegeassistant.base.BaseActivity;
+import com.linstick.collegeassistant.sqlite.UserDaoUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -66,9 +68,13 @@ public class ModifyPasswordActivity extends BaseActivity {
         }
 
         // 修改操作
+        if (UserDaoUtil.resetPassword(App.getUserId(), originalPassword, newPassword)) {
+            Toast.makeText(ModifyPasswordActivity.this, "修改密码成功", Toast.LENGTH_SHORT).show();
+            ModifyPasswordActivity.this.finish();
+        } else {
+            Toast.makeText(ModifyPasswordActivity.this, "修改失败", Toast.LENGTH_SHORT).show();
+        }
 
-        Toast.makeText(ModifyPasswordActivity.this, "修改密码成功", Toast.LENGTH_SHORT).show();
-        ModifyPasswordActivity.this.finish();
 
     }
 }

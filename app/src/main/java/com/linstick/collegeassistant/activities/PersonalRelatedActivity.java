@@ -6,8 +6,10 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.linstick.collegeassistant.App;
 import com.linstick.collegeassistant.R;
 import com.linstick.collegeassistant.adapters.SwipeRelatedMessageAdapter;
 import com.linstick.collegeassistant.adapters.listeners.OnRelatedMessageClickListener;
@@ -15,6 +17,7 @@ import com.linstick.collegeassistant.base.BaseActivity;
 import com.linstick.collegeassistant.beans.Relation;
 import com.linstick.collegeassistant.callbacks.LoadDataCallBack;
 import com.linstick.collegeassistant.events.LoadDataEvent;
+import com.linstick.collegeassistant.sqlite.RelationDaoUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -28,6 +31,8 @@ import butterknife.ButterKnife;
 
 public class PersonalRelatedActivity extends BaseActivity implements OnRelatedMessageClickListener {
 
+
+    private static final String TAG = "PersonalRelatedActivity";
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.rv_note_list)
@@ -45,7 +50,7 @@ public class PersonalRelatedActivity extends BaseActivity implements OnRelatedMe
 
         @Override
         public void onSuccessEmpty() {
-            EventBus.getDefault().post(LoadDataEvent.REFRESH_SUCCESS);
+            EventBus.getDefault().post(LoadDataEvent.REFRESH_SUCCESS_EMPTY);
         }
 
         @Override
@@ -56,6 +61,7 @@ public class PersonalRelatedActivity extends BaseActivity implements OnRelatedMe
     protected LoadDataCallBack<Relation> loadMoreCallBack = new LoadDataCallBack<Relation>() {
         @Override
         public void onSuccess(List<Relation> list) {
+            Log.d(TAG, "onSuccess: laiguo " + list.size());
             mList.addAll(list);
             EventBus.getDefault().post(LoadDataEvent.LOAD_MORE_SUCCESS);
         }
@@ -74,6 +80,7 @@ public class PersonalRelatedActivity extends BaseActivity implements OnRelatedMe
     private LinearLayoutManager mLayoutManager;
     private boolean isLoadingMore;
     private boolean hasMore = true;
+    private int pageSize = 20;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -113,17 +120,17 @@ public class PersonalRelatedActivity extends BaseActivity implements OnRelatedMe
                 refreshData(refreshCallBack);
             }
         });
-        if (mList.size() == 0) {
-            refreshLayout.setRefreshing(true);
-            isLoadingMore = true;
-            loadMoreData(loadMoreCallBack);
-        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
+        if (mList.size() == 0) {
+            refreshLayout.setRefreshing(true);
+            isLoadingMore = true;
+            loadMoreData(loadMoreCallBack);
+        }
     }
 
     @Override
@@ -142,7 +149,7 @@ public class PersonalRelatedActivity extends BaseActivity implements OnRelatedMe
                 break;
 
             case REFRESH_SUCCESS_EMPTY:
-                Toast.makeText(this, "暂时无更多新数据了", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PersonalRelatedActivity.this, "暂时没有新内容喔", Toast.LENGTH_SHORT).show();
                 break;
 
             case REFRESH_FAIL:
@@ -166,58 +173,34 @@ public class PersonalRelatedActivity extends BaseActivity implements OnRelatedMe
         }
     }
 
+    private int getFirstItemId() {
+        return (mList == null || mList.size() == 0) ? -1 : mList.get(0).getId();
+    }
+
+    private int getLastItemId() {
+        return (mList == null || mList.size() == 0) ? Integer.MAX_VALUE : mList.get(mList.size() - 1).getId();
+    }
+
     public void refreshData(final LoadDataCallBack callBack) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    // 模拟耗时操作
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                // 获取数据
-                List<Relation> result = new ArrayList<>();
-                for (int i = 0; i < 10; i++) {
-                    result.add(new Relation());
-                }
-                // 对数据结果继续判断
-                if (result == null) {
-                    callBack.onFail("加载失败");
-                } else if (result.size() == 0) {
-                    callBack.onSuccessEmpty();
-                } else {
-                    callBack.onSuccess(result);
-                }
-            }
-        }).start();
+        List<Relation> result = RelationDaoUtil.findAfterRelationsByUserId(App.getUserId(), getFirstItemId());
+        if (result == null) {
+            callBack.onFail("加载失败");
+        } else if (result.size() == 0) {
+            callBack.onSuccessEmpty();
+        } else {
+            callBack.onSuccess(result);
+        }
     }
 
     public void loadMoreData(final LoadDataCallBack callBack) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    // 模拟耗时操作
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                // 获取数据
-                List<Relation> result = new ArrayList<>();
-                for (int i = 0; i < 10; i++) {
-                    result.add(new Relation());
-                }
-                // 对数据结果继续判断
-                if (result == null) {
-                    callBack.onFail("加载失败");
-                } else if (result.size() == 0) {
-                    callBack.onSuccessEmpty();
-                } else {
-                    callBack.onSuccess(result);
-                }
-            }
-        }).start();
+        List<Relation> result = RelationDaoUtil.findBeforeRelationsByUserId(App.getUserId(), getLastItemId(), pageSize);
+        if (result == null) {
+            callBack.onFail("加载失败");
+        } else if (result.size() == 0) {
+            callBack.onSuccessEmpty();
+        } else {
+            callBack.onSuccess(result);
+        }
     }
 
     @Override

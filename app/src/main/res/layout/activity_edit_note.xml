@@ -69,10 +69,9 @@
                     android:background="@drawable/bg_border_orange"
                     android:hint="如：2018 BIGO秋招宣笔"
                     android:maxLines="2"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
+                    android:padding="6dp"
                     android:textColor="#555555"
-                    android:textSize="14sp" />
+                    android:textSize="15sp" />
 
             </LinearLayout>
 
@@ -103,10 +102,9 @@
                     android:hint="BIGO 2018秋招已经正式启动，本次为广州站的线下宣讲会+笔试活动，有兴趣的2019届同学可以报名参加"
                     android:maxLines="6"
                     android:minLines="6"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
+                    android:padding="6dp"
                     android:textColor="#555555"
-                    android:textSize="14sp" />
+                    android:textSize="15sp" />
 
             </LinearLayout>
 
@@ -134,10 +132,9 @@
                     android:layout_marginTop="2dp"
                     android:background="@drawable/bg_border_orange"
                     android:hint="如：2018-10-20 19:00"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
+                    android:padding="6dp"
                     android:textColor="#555555"
-                    android:textSize="14sp" />
+                    android:textSize="15sp" />
 
             </LinearLayout>
 
@@ -165,10 +162,9 @@
                     android:layout_marginTop="2dp"
                     android:background="@drawable/bg_border_orange"
                     android:hint="如：2小时"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
+                    android:padding="6dp"
                     android:textColor="#555555"
-                    android:textSize="14sp" />
+                    android:textSize="15sp" />
 
             </LinearLayout>
 
@@ -196,10 +192,9 @@
                     android:layout_marginTop="2dp"
                     android:background="@drawable/bg_border_orange"
                     android:hint="如：广东工业大学(大学城校区) 教2-306"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
+                    android:padding="6dp"
                     android:textColor="#555555"
-                    android:textSize="14sp" />
+                    android:textSize="15sp" />
 
             </LinearLayout>
 
@@ -227,10 +222,9 @@
                     android:layout_marginTop="2dp"
                     android:background="@drawable/bg_border_orange"
                     android:hint="如：带上1支笔和3份简历(可选)"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
+                    android:padding="6dp"
                     android:textColor="#555555"
-                    android:textSize="14sp" />
+                    android:textSize="15sp" />
 
             </LinearLayout>
 
