@@ -36,6 +36,21 @@ public class Note extends DataSupport implements Serializable {
     private boolean isLiked;
     private boolean isCollected;
 
+    public Note() {
+    }
+
+    public Note(int publisherId, int belongModuleId, String title, String content, Date publishTime, Date startTime, String keepTime, String address, String remarks) {
+        this.publisherId = publisherId;
+        this.belongModuleId = belongModuleId;
+        this.title = title;
+        this.content = content;
+        this.publishTime = publishTime;
+        this.startTime = startTime;
+        this.keepTime = keepTime;
+        this.address = address;
+        this.remarks = remarks;
+    }
+
     public User getPublisher() {
         return publisher;
     }

@@ -13,6 +13,15 @@ public class Module extends DataSupport implements Serializable {
     private String name;
     private String simpleName;
 
+    public Module() {
+    }
+
+    public Module(int id, String name, String simpleName) {
+        this.id = id;
+        this.name = name;
+        this.simpleName = simpleName;
+    }
+
     public int getId() {
         return id;
     }

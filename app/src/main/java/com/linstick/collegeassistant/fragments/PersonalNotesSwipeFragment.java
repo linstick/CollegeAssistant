@@ -34,7 +34,7 @@ public class PersonalNotesSwipeFragment extends BaseSwipeNoteFragment implements
 
     @Override
     public void refreshData(final SwipeLoadDataCallback<Note> callBack) {
-        List<Note> result = NoteDaoUtil.findAfterNotesByUserId(App.getUserId(), getFirstItemId());
+        List<Note> result = NoteDaoUtil.findAfterNotesByUserId(App.getUserId(), getFirstItemPublishDate());
         callBack.onRefreshCallback(result);
     }
 

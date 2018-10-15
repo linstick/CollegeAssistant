@@ -25,7 +25,7 @@ public class SearchNotesSwipeFragment extends BaseSwipeNoteFragment {
 
     @Override
     public void refreshData(final SwipeLoadDataCallback<Note> callBack) {
-        List<Note> result = NoteDaoUtil.findAfterNotesByKeyword(App.getUserId(), getFirstItemId(), keyword);
+        List<Note> result = NoteDaoUtil.findAfterNotesByKeyword(App.getUserId(), getFirstItemPublishDate(), keyword);
         callBack.onRefreshCallback(result);
     }
 

@@ -1,5 +1,6 @@
 package com.linstick.collegeassistant.utils;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -7,6 +8,8 @@ import java.util.Date;
 public class TimeFactoryUtil {
 
     public final static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    public static long currentBefore = System.currentTimeMillis();
+    public static long currentAfter = System.currentTimeMillis();
 
     public static String timeToLeftTime(Date date) {
         Date currDate = new Date();
@@ -59,5 +62,15 @@ public class TimeFactoryUtil {
             return false;
         }
         return true;
+    }
+
+    public static Date createBeforeRandomDate() {
+        currentBefore += (int) (Math.random() * 60 * 60 * 1000);
+        return new Date(currentBefore);
+    }
+
+    public static Date createAfterRandomDate() {
+        currentAfter -= (int) (Math.random() * 60 * 60 * 1000);
+        return new Date(currentAfter);
     }
 }

@@ -11,7 +11,7 @@ import java.util.Date;
 public class User extends DataSupport implements Serializable {
 
     private int id;
-    private String iconUrl;
+    private int iconUrl;
     private String nickName;
     private String realName;
     private int age;
@@ -27,6 +27,26 @@ public class User extends DataSupport implements Serializable {
     private String description;
     private Date registerTime;
 
+    public User() {
+    }
+
+    public User(int iconUrl, String nickName, String realName, int age, String university, String klazz, String department, String major, String address, String cellNumber, String email, String password, boolean isMale, String description, Date registerTime) {
+        this.iconUrl = iconUrl;
+        this.nickName = nickName;
+        this.realName = realName;
+        this.age = age;
+        this.university = university;
+        this.klazz = klazz;
+        this.department = department;
+        this.major = major;
+        this.address = address;
+        this.cellNumber = cellNumber;
+        this.email = email;
+        this.password = password;
+        this.isMale = isMale;
+        this.description = description;
+        this.registerTime = registerTime;
+    }
 
     public int getId() {
         return id;
@@ -36,11 +56,11 @@ public class User extends DataSupport implements Serializable {
         this.id = id;
     }
 
-    public String getIconUrl() {
+    public int getIconUrl() {
         return iconUrl;
     }
 
-    public void setIconUrl(String iconUrl) {
+    public void setIconUrl(int iconUrl) {
         this.iconUrl = iconUrl;
     }
 

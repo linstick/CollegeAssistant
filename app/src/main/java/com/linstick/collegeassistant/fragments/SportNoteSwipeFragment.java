@@ -22,7 +22,7 @@ public class SportNoteSwipeFragment extends BaseSwipeNoteFragment {
 
     @Override
     public void refreshData(final SwipeLoadDataCallback<Note> callBack) {
-        List<Note> result = NoteDaoUtil.findAfterNotesByModuleId(App.getUserId(), getFirstItemId(), getModuleId());
+        List<Note> result = NoteDaoUtil.findAfterNotesByModuleId(App.getUserId(), getFirstItemPublishDate(), getModuleId());
         callBack.onRefreshCallback(result);
     }
 

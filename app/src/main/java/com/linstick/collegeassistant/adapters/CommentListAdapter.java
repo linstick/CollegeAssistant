@@ -40,7 +40,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Comment comment = mList.get(position);
-        holder.userIconIv.setImageResource(R.drawable.bg_setting_header);
+        holder.userIconIv.setImageResource(comment.getPublisher().getIconUrl());
         holder.nicknameTv.setText(comment.getPublisher().getNickName());
         holder.publishTimeTv.setText(TimeFactoryUtil.dateToStringFormat(comment.getPublishTime()));
         holder.commentTv.setText(comment.getContent());

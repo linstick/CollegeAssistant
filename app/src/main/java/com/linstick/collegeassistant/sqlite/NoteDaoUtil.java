@@ -12,6 +12,7 @@ import com.linstick.collegeassistant.beans.User;
 import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class NoteDaoUtil {
@@ -93,7 +94,6 @@ public class NoteDaoUtil {
             case CONDITION_BEFORE_NOTE_BY_MODULE_ID:
                 result = DataSupport
                         .where("id < ? and belongModuleId = ?", id + "", value)
-                        .order("id desc")
                         .order("id desc")
                         .limit(pageSize)
                         .find(Note.class);

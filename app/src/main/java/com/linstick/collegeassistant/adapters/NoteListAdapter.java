@@ -50,9 +50,9 @@ public class NoteListAdapter extends BaseSwipeNoteAdapter {
         if (holder instanceof OrdinaryViewHolder) {
             OrdinaryViewHolder viewHolder = (OrdinaryViewHolder) holder;
             Note note = mList.get(position);
-            viewHolder.userIconIv.setImageResource(R.drawable.bg_setting_header);
+            viewHolder.userIconIv.setImageResource(note.getPublisher().getIconUrl());
             viewHolder.nicknameTv.setText(note.getPublisher().getNickName());
-            viewHolder.publishTimeTv.setText(TimeFactoryUtil.timeToLeftTime(note.getPublishTime()));
+            viewHolder.publishTimeTv.setText(TimeFactoryUtil.dateToStringFormat(note.getPublishTime()));
             viewHolder.noteTitleTv.setText(note.getTitle());
             viewHolder.noteContentTv.setText(note.getContent());
             viewHolder.collectCountTv.setText(note.getCollectCount() + "");
@@ -62,7 +62,7 @@ public class NoteListAdapter extends BaseSwipeNoteAdapter {
             viewHolder.likeIv.setImageResource(note.isLiked() ? R.drawable.ic_like_orange : R.drawable.ic_like_gray);
 
             // 标题为空的话，隐藏标题
-            if (note.getBelongModule().getId() == Module.MODULE_LIST.length - 2 || note.getTitle().equals("")) {
+            if (note.getBelongModule().getId() == Module.MODULE_LIST.length - 1 || note.getTitle().equals("")) {
                 // 校园生活模块隐藏标题，其他活动模块当标题为空时也隐藏
                 viewHolder.noteTitleTv.setVisibility(View.GONE);
             } else {

@@ -89,9 +89,9 @@ public class MainActivity extends BaseActivity implements
     private void initFragment() {
         mFragmentList = new ArrayList<>();
         mFragmentList.add(new AllNotesSwipeFragment());
+        mFragmentList.add(new CampusTalkSwipeFragment());
         mFragmentList.add(new ClubNoteSwipeFragment());
         mFragmentList.add(new LectureNotesSwipeFragment());
-        mFragmentList.add(new CampusTalkSwipeFragment());
         mFragmentList.add(new SportNoteSwipeFragment());
         mFragmentList.add(new LifeNotesSwipeFragment());
         mFragmentList.add(new OtherNoteSwipeFragment());

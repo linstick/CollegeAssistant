@@ -29,7 +29,7 @@ public class CollectedNotesSwipeFragment extends BaseSwipeNoteFragment implement
 
     @Override
     public void refreshData(final SwipeLoadDataCallback<Note> callBack) {
-        List<Note> result = NoteDaoUtil.findAfterNotesByCollectorId(App.getUserId(), getFirstItemId());
+        List<Note> result = NoteDaoUtil.findAfterNotesByCollectorId(App.getUserId(), getFirstItemPublishDate());
         callBack.onRefreshCallback(result);
     }
 

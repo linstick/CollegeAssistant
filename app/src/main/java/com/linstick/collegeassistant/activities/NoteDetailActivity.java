@@ -213,11 +213,11 @@ public class NoteDetailActivity extends BaseActivity implements OnCommentListCli
         collectIv.setImageResource(mNote.isCollected() ? R.drawable.ic_star_orange : R.drawable.ic_star_gray);
 
 
-        if (mNote.getBelongModule().getId() >= Module.MODULE_LIST.length - 2) {
+        if (mNote.getBelongModule().getId() >= Module.MODULE_LIST.length - 1) {
             startTimeLayout.setVisibility(View.GONE);
             addressLayout.setVisibility(View.GONE);
             remarksLayout.setVisibility(View.GONE);
-            if (mNote.getBelongModule().getId() == Module.MODULE_LIST.length - 2 || mNote.getTitle().equals("")) {
+            if (mNote.getBelongModule().getId() == Module.MODULE_LIST.length - 1 || mNote.getTitle().equals("")) {
                 noteTitleTv.setVisibility(View.GONE);
             }
         } else {

@@ -27,12 +27,12 @@ public class AllNotesSwipeFragment extends BaseSwipeNoteFragment implements OnNo
 
     @Override
     public int getModuleId() {
-        return -1;
+        return 0;
     }
 
     @Override
     public void refreshData(final SwipeLoadDataCallback<Note> callBack) {
-        List<Note> result = NoteDaoUtil.findAfterNotes(App.getUserId(), getFirstItemId());
+        List<Note> result = NoteDaoUtil.findAfterNotes(App.getUserId(), getFirstItemPublishDate());
         callBack.onRefreshCallback(result);
     }
 

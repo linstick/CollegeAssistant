@@ -49,7 +49,7 @@ public class CollectedNotesAdapter extends BaseSwipeNoteAdapter {
         if (holder instanceof OrdinaryViewHolder) {
             Note note = mList.get(position);
             OrdinaryViewHolder viewHolder = (OrdinaryViewHolder) holder;
-            viewHolder.userIconIv.setImageResource(R.drawable.bg_setting_header);
+            viewHolder.userIconIv.setImageResource(note.getPublisher().getIconUrl());
             viewHolder.nicknameTv.setText(note.getPublisher().getNickName());
             viewHolder.noteTitleTv.setText(note.getTitle());
             viewHolder.noteContentTv.setText(note.getContent());

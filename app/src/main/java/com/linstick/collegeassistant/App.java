@@ -24,6 +24,5 @@ public class App extends LitePalApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        mUser = UserDaoUtil.findUser(1);
     }
 }

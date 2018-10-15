@@ -144,6 +144,7 @@ public abstract class BaseSwipeNoteFragment extends Fragment implements
     @Override
     public void onNoteItemClick(int position) {
         // 跳转到帖子详情界面
+
         NoteDetailActivity.startAction(getContext(), mList.get(position));
     }
 
@@ -217,7 +218,7 @@ public abstract class BaseSwipeNoteFragment extends Fragment implements
         loadMoreData(this);
     }
 
-    protected int getFirstItemId() {
+    protected int getFirstItemPublishDate() {
         return (mList != null && mList.size() > 0) ? mList.get(0).getId() : -1;
     }
 

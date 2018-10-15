@@ -3,6 +3,7 @@ package com.linstick.collegeassistant.beans;
 import org.litepal.crud.DataSupport;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 收藏关系表
@@ -19,6 +20,7 @@ public class Collection extends DataSupport implements Serializable {
         this.collectorId = collectorId;
         this.belongNoteId = belongNoteId;
     }
+
 
     public int getBelongNoteId() {
         return belongNoteId;
@@ -39,8 +41,8 @@ public class Collection extends DataSupport implements Serializable {
     @Override
     public String toString() {
         return "Collection{" +
-                "belongNoteId=" + belongNoteId +
-                ", collectorId=" + collectorId +
+                "collectorId=" + collectorId +
+                ", belongNoteId=" + belongNoteId +
                 '}';
     }
 }
