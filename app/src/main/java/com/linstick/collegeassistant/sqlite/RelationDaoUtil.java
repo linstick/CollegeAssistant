@@ -1,8 +1,6 @@
 package com.linstick.collegeassistant.sqlite;
 
-import android.util.Log;
-
-import com.linstick.collegeassistant.beans.Note;
+import com.linstick.collegeassistant.App;
 import com.linstick.collegeassistant.beans.Relation;
 
 import org.litepal.crud.DataSupport;
@@ -21,7 +19,6 @@ public class RelationDaoUtil {
                 .limit(pageSize)
                 .find(Relation.class);
         completeRelationData(list);
-        Log.d(TAG, "findBeforeRelationsByUserId: 来过 " + list.size());
         return list;
     }
 
@@ -31,7 +28,6 @@ public class RelationDaoUtil {
                 .order("id desc")
                 .find(Relation.class);
         completeRelationData(list);
-        Log.d(TAG, "findAfterRelationsByUserId: laiguo " + list.size());
         return list;
     }
 
@@ -40,7 +36,7 @@ public class RelationDaoUtil {
             return;
         }
         for (Relation relation : list) {
-            relation.setRelatedNote(DataSupport.find(Note.class, relation.getRelatedNoteId()));
+            relation.setRelatedNote(NoteDaoUtil.findNoteById(App.getUserId(), relation.getRelatedNoteId()));
             relation.setSender(UserDaoUtil.findUser(relation.getSenderId()));
         }
     }

@@ -25,6 +25,18 @@ public class Relation extends DataSupport implements Serializable {
     private String content;
     private Date sendTime;
 
+    public Relation() {
+    }
+
+
+    public Relation(int senderId, int relatedUserId, int relatedNoteId, int type) {
+        this.senderId = senderId;
+        this.relatedNoteId = relatedNoteId;
+        this.relatedUserId = relatedUserId;
+        this.type = type;
+        this.sendTime = new Date();
+    }
+
     public int getId() {
         return id;
     }

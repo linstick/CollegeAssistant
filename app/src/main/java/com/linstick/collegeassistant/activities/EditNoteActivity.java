@@ -83,12 +83,10 @@ public class EditNoteActivity extends BaseEditDataActivity implements AdapterVie
         String keepTime = keepTimeInputEt.getText().toString().trim();
         String address = addressInputEt.getText().toString().trim();
         String remarks = remarksInputEt.getText().toString().trim();
-        if (position + 2 < count) {
-            // 不是校园生活或其他活动,检查标题
-            if (TextUtils.isEmpty(title)) {
-                Toast.makeText(EditNoteActivity.this, "标题不能为空", Toast.LENGTH_SHORT).show();
-                return;
-            }
+        // 检查标题
+        if (TextUtils.isEmpty(title)) {
+            Toast.makeText(EditNoteActivity.this, "标题不能为空", Toast.LENGTH_SHORT).show();
+            return;
         }
         // 检查内容
         if (TextUtils.isEmpty(content)) {
@@ -138,29 +136,29 @@ public class EditNoteActivity extends BaseEditDataActivity implements AdapterVie
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        int count = adapterView.getCount();
-        if (i + 2 >= count) {
-            if (i + 2 == count) {
-                // 校园活动
-                titleLayout.setVisibility(View.GONE);
-            }
-            startTimeLayout.setVisibility(View.GONE);
-            keepTimeLayout.setVisibility(View.GONE);
-            addressLayout.setVisibility(View.GONE);
-            remarksLayout.setVisibility(View.GONE);
-        } else {
-            titleLayout.setVisibility(View.VISIBLE);
-            startTimeLayout.setVisibility(View.VISIBLE);
-            keepTimeLayout.setVisibility(View.VISIBLE);
-            addressLayout.setVisibility(View.VISIBLE);
-            remarksLayout.setVisibility(View.VISIBLE);
-        }
-        titleInputEt.setText("");
-        contentInputEt.setText("");
-        startTimeInputEt.setText("");
-        keepTimeInputEt.setText("");
-        addressInputEt.setText("");
-        remarksInputEt.setText("");
+//        int count = adapterView.getCount();
+//        if (i + 2 >= count) {
+//            if (i + 2 == count) {
+//                // 校园活动
+//                titleLayout.setVisibility(View.GONE);
+//            }
+//            startTimeLayout.setVisibility(View.GONE);
+//            keepTimeLayout.setVisibility(View.GONE);
+//            addressLayout.setVisibility(View.GONE);
+//            remarksLayout.setVisibility(View.GONE);
+//        } else {
+//            titleLayout.setVisibility(View.VISIBLE);
+//            startTimeLayout.setVisibility(View.VISIBLE);
+//            keepTimeLayout.setVisibility(View.VISIBLE);
+//            addressLayout.setVisibility(View.VISIBLE);
+//            remarksLayout.setVisibility(View.VISIBLE);
+//        }
+//        titleInputEt.setText("");
+//        contentInputEt.setText("");
+//        startTimeInputEt.setText("");
+//        keepTimeInputEt.setText("");
+//        addressInputEt.setText("");
+//        remarksInputEt.setText("");
     }
 
     @Override

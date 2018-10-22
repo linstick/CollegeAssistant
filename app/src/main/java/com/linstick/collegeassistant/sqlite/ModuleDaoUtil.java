@@ -13,4 +13,8 @@ public class ModuleDaoUtil {
         return result;
     }
 
+    public static Module findModuleById(int id) {
+        return DataSupport.find(Module.class, id);
+    }
+
 }

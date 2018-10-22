@@ -1,7 +1,6 @@
 package com.linstick.collegeassistant;
 
 import com.linstick.collegeassistant.beans.User;
-import com.linstick.collegeassistant.sqlite.UserDaoUtil;
 
 import org.litepal.LitePalApplication;
 

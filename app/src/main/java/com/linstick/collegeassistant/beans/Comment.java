@@ -18,6 +18,16 @@ public class Comment extends DataSupport implements Serializable {
     private String content;
     private Date publishTime;
 
+    public Comment() {
+    }
+
+    public Comment(int publisherId, int belongNoteId, String content) {
+        this.belongNoteId = belongNoteId;
+        this.publisherId = publisherId;
+        this.content = content;
+        this.publishTime = new Date();
+    }
+
     public User getPublisher() {
         return publisher;
     }

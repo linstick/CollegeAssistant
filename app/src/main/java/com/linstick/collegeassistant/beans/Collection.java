@@ -3,7 +3,6 @@ package com.linstick.collegeassistant.beans;
 import org.litepal.crud.DataSupport;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * 收藏关系表

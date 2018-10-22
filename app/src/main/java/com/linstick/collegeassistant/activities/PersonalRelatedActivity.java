@@ -6,7 +6,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.linstick.collegeassistant.App;
@@ -15,7 +14,7 @@ import com.linstick.collegeassistant.adapters.SwipeRelatedMessageAdapter;
 import com.linstick.collegeassistant.adapters.listeners.OnRelatedMessageClickListener;
 import com.linstick.collegeassistant.base.BaseActivity;
 import com.linstick.collegeassistant.beans.Relation;
-import com.linstick.collegeassistant.callbacks.LoadDataCallBack;
+import com.linstick.collegeassistant.callbacks.SwipeLoadDataCallback;
 import com.linstick.collegeassistant.events.LoadDataEvent;
 import com.linstick.collegeassistant.sqlite.RelationDaoUtil;
 
@@ -29,7 +28,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class PersonalRelatedActivity extends BaseActivity implements OnRelatedMessageClickListener {
+public class PersonalRelatedActivity extends BaseActivity implements
+        SwipeLoadDataCallback<Relation>, OnRelatedMessageClickListener {
 
 
     private static final String TAG = "PersonalRelatedActivity";
@@ -41,41 +41,6 @@ public class PersonalRelatedActivity extends BaseActivity implements OnRelatedMe
     SwipeRefreshLayout refreshLayout;
 
     private List<Relation> mList;
-    protected LoadDataCallBack<Relation> refreshCallBack = new LoadDataCallBack<Relation>() {
-        @Override
-        public void onSuccess(List<Relation> list) {
-            mList.addAll(0, list);
-            EventBus.getDefault().post(LoadDataEvent.REFRESH_SUCCESS);
-        }
-
-        @Override
-        public void onSuccessEmpty() {
-            EventBus.getDefault().post(LoadDataEvent.REFRESH_SUCCESS_EMPTY);
-        }
-
-        @Override
-        public void onFail(String error) {
-            EventBus.getDefault().post(LoadDataEvent.REFRESH_FAIL);
-        }
-    };
-    protected LoadDataCallBack<Relation> loadMoreCallBack = new LoadDataCallBack<Relation>() {
-        @Override
-        public void onSuccess(List<Relation> list) {
-            Log.d(TAG, "onSuccess: laiguo " + list.size());
-            mList.addAll(list);
-            EventBus.getDefault().post(LoadDataEvent.LOAD_MORE_SUCCESS);
-        }
-
-        @Override
-        public void onSuccessEmpty() {
-            EventBus.getDefault().post(LoadDataEvent.LOAD_MORE_SUCCESS_EMPTY);
-        }
-
-        @Override
-        public void onFail(String error) {
-            EventBus.getDefault().post(LoadDataEvent.LOAD_MORE_FAIL);
-        }
-    };
     private SwipeRelatedMessageAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
     private boolean isLoadingMore;
@@ -106,9 +71,9 @@ public class PersonalRelatedActivity extends BaseActivity implements OnRelatedMe
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 int position = mLayoutManager.findLastVisibleItemPosition();
-                if (!isLoadingMore && hasMore && position + 3 > mList.size()) {
+                if (!isLoadingMore && hasMore && position + 5 > mList.size()) {
                     isLoadingMore = true;
-                    loadMoreData(loadMoreCallBack);
+                    loadMoreData(PersonalRelatedActivity.this);
                 }
             }
         });
@@ -117,7 +82,7 @@ public class PersonalRelatedActivity extends BaseActivity implements OnRelatedMe
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refreshData(refreshCallBack);
+                refreshData(PersonalRelatedActivity.this);
             }
         });
     }
@@ -129,7 +94,7 @@ public class PersonalRelatedActivity extends BaseActivity implements OnRelatedMe
         if (mList.size() == 0) {
             refreshLayout.setRefreshing(true);
             isLoadingMore = true;
-            loadMoreData(loadMoreCallBack);
+            loadMoreData(this);
         }
     }
 
@@ -137,40 +102,6 @@ public class PersonalRelatedActivity extends BaseActivity implements OnRelatedMe
     protected void onPause() {
         super.onPause();
         EventBus.getDefault().unregister(this);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onStopLoadData(LoadDataEvent event) {
-        refreshLayout.setRefreshing(false);
-        switch (event) {
-            case REFRESH_SUCCESS:
-                mAdapter.notifyDataSetChanged();
-                messageListRv.smoothScrollToPosition(0);
-                break;
-
-            case REFRESH_SUCCESS_EMPTY:
-                Toast.makeText(PersonalRelatedActivity.this, "暂时没有新内容喔", Toast.LENGTH_SHORT).show();
-                break;
-
-            case REFRESH_FAIL:
-                Toast.makeText(this, "更新失败，请求检查网络或稍后再试", Toast.LENGTH_SHORT).show();
-                break;
-
-            case LOAD_MORE_SUCCESS:
-                isLoadingMore = false;
-                mAdapter.notifyDataSetChanged();
-                break;
-            case LOAD_MORE_SUCCESS_EMPTY:
-                isLoadingMore = false;
-                hasMore = false;
-                mAdapter.setHasMore(hasMore);
-                mAdapter.notifyDataSetChanged();
-                break;
-            case LOAD_MORE_FAIL:
-                isLoadingMore = false;
-                Toast.makeText(this, "加载失败，请求检查网络或稍后再试", Toast.LENGTH_SHORT).show();
-                break;
-        }
     }
 
     private int getFirstItemId() {
@@ -181,30 +112,95 @@ public class PersonalRelatedActivity extends BaseActivity implements OnRelatedMe
         return (mList == null || mList.size() == 0) ? Integer.MAX_VALUE : mList.get(mList.size() - 1).getId();
     }
 
-    public void refreshData(final LoadDataCallBack callBack) {
-        List<Relation> result = RelationDaoUtil.findAfterRelationsByUserId(App.getUserId(), getFirstItemId());
-        if (result == null) {
-            callBack.onFail("加载失败");
-        } else if (result.size() == 0) {
-            callBack.onSuccessEmpty();
-        } else {
-            callBack.onSuccess(result);
-        }
+    public void refreshData(final SwipeLoadDataCallback<Relation> callBack) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                List<Relation> result = RelationDaoUtil.findAfterRelationsByUserId(App.getUserId(), getFirstItemId());
+                callBack.onRefreshCallback(result);
+            }
+        }).start();
     }
 
-    public void loadMoreData(final LoadDataCallBack callBack) {
-        List<Relation> result = RelationDaoUtil.findBeforeRelationsByUserId(App.getUserId(), getLastItemId(), pageSize);
-        if (result == null) {
-            callBack.onFail("加载失败");
-        } else if (result.size() == 0) {
-            callBack.onSuccessEmpty();
-        } else {
-            callBack.onSuccess(result);
-        }
+    public void loadMoreData(final SwipeLoadDataCallback<Relation> callBack) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                List<Relation> result = RelationDaoUtil.findBeforeRelationsByUserId(App.getUserId(), getLastItemId(), pageSize);
+                callBack.onLoadMoreCallback(result);
+            }
+        }).start();
     }
 
     @Override
     public void onRelatedMessageClick(int position) {
         NoteDetailActivity.startAction(PersonalRelatedActivity.this, mList.get(position).getRelatedNote());
+    }
+
+    // ============================ 加载数据事件回调 ============================
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLoadDataEvent(LoadDataEvent event) {
+        refreshLayout.setRefreshing(false);
+        switch (event) {
+            case REFRESH_SUCCESS:
+                mAdapter.notifyDataSetChanged();
+                messageListRv.smoothScrollToPosition(0);
+                break;
+            case REFRESH_SUCCESS_EMPTY:
+                Toast.makeText(PersonalRelatedActivity.this, "暂时没有新内容喔", Toast.LENGTH_SHORT).show();
+                break;
+            case REFRESH_FAIL:
+                Toast.makeText(PersonalRelatedActivity.this, "更新失败，请求检查网络或稍后再试", Toast.LENGTH_SHORT).show();
+                break;
+            case LOAD_MORE_SUCCESS:
+            case LOAD_MORE_SUCCESS_EMPTY:
+                mAdapter.notifyDataSetChanged();
+                break;
+            case LOAD_MORE_FAIL:
+                Toast.makeText(PersonalRelatedActivity.this, "加载失败，请求检查网络或稍后再试", Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
+    // =========================================================================
+
+    // 下拉刷新事件回调
+    @Override
+    public void onRefreshCallback(List<Relation> result) {
+        if (result == null) {
+            EventBus.getDefault().post(LoadDataEvent.REFRESH_FAIL);
+        } else if (result.size() == 0) {
+            EventBus.getDefault().post(LoadDataEvent.REFRESH_SUCCESS_EMPTY);
+        } else {
+            mList.addAll(0, result);
+            EventBus.getDefault().post(LoadDataEvent.REFRESH_SUCCESS);
+        }
+    }
+
+    // 上拉加载更多事件回调
+    @Override
+    public void onLoadMoreCallback(List<Relation> result) {
+        isLoadingMore = false;
+        if (result == null) {
+            EventBus.getDefault().post(LoadDataEvent.LOAD_MORE_FAIL);
+        } else {
+            mList.addAll(result);
+            EventBus.getDefault().post(LoadDataEvent.LOAD_MORE_SUCCESS);
+            if (result.size() < pageSize) {
+                hasMore = false;
+                mAdapter.setHasMore(hasMore);
+                EventBus.getDefault().post(LoadDataEvent.LOAD_MORE_SUCCESS_EMPTY);
+            }
+        }
     }
 }

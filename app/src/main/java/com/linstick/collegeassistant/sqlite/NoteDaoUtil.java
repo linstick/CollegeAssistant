@@ -1,7 +1,5 @@
 package com.linstick.collegeassistant.sqlite;
 
-import android.util.Log;
-
 import com.linstick.collegeassistant.beans.Collection;
 import com.linstick.collegeassistant.beans.Comment;
 import com.linstick.collegeassistant.beans.Like;
@@ -12,7 +10,6 @@ import com.linstick.collegeassistant.beans.User;
 import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class NoteDaoUtil {
@@ -28,6 +25,23 @@ public class NoteDaoUtil {
     private final static int CONDITION_AFTER_NOTE_BY_MODULE_ID = 8;
     private final static int CONDITION_AFTER_NOTE_BY_KEYWORD = 9;
     private final static int CONDITION_AFTER_NOTE_BY_COLLECTOR_ID = 10;
+
+    public static Note findNoteById(int currUserId, int id) {
+        Note note = DataSupport.find(Note.class, id);
+        note.setPublisher(UserDaoUtil.findUser(note.getPublisherId()));
+        note.setBelongModule(ModuleDaoUtil.findModuleById(note.getBelongModuleId()));
+        int collectCount = DataSupport.where("belongNoteId = ?", note.getId() + "").count(Collection.class);
+        note.setCollectCount(collectCount);
+        int commentCount = DataSupport.where("belongNoteId = ?", note.getId() + "").count(Comment.class);
+        note.setCommentCount(commentCount);
+        int likeCount = DataSupport.where("belongNoteId = ?", note.getId() + "").count(Like.class);
+        note.setLikeCount(likeCount);
+        if (currUserId != -1) {
+            note.setLiked(DataSupport.where("likerId = ? and belongNoteId = ?", currUserId + "", note.getId() + "").findFirst(Like.class) == null ? false : true);
+            note.setCollected(DataSupport.where("collectorId = ? and belongNoteId = ?", currUserId + "", note.getId() + "").findFirst(Collection.class) == null ? false : true);
+        }
+        return note;
+    }
 
     // 无条件查询id比指定id的小的帖子，帖子的id越小，表示发布的越久，
     // 这里相当于无条件加载更多，限制页面大小
@@ -152,7 +166,6 @@ public class NoteDaoUtil {
                 break;
         }
         completeNoteData(result, currUserId, conditionType);
-        Log.d(TAG, "findNotes: 来过 " + result.size());
         return result;
     }
 

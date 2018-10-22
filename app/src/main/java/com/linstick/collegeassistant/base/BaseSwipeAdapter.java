@@ -15,7 +15,7 @@ import butterknife.ButterKnife;
 public abstract class BaseSwipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     protected static final int TYPE_ORDINARY_ITEM = 0;
     protected static final int TYPE_FOOTER_ITEM = 1;
-    protected static boolean hasMore = true;
+    protected boolean hasMore = true;
 
     public void setHasMore(boolean hasMore) {
         this.hasMore = hasMore;

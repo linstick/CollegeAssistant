@@ -21,9 +21,14 @@ import com.linstick.collegeassistant.adapters.listeners.OnNoteListPartialClickLi
 import com.linstick.collegeassistant.beans.Collection;
 import com.linstick.collegeassistant.beans.Like;
 import com.linstick.collegeassistant.beans.Note;
+import com.linstick.collegeassistant.beans.Relation;
 import com.linstick.collegeassistant.beans.User;
 import com.linstick.collegeassistant.callbacks.SwipeLoadDataCallback;
+import com.linstick.collegeassistant.events.LoadDataEvent;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
@@ -74,7 +79,7 @@ public abstract class BaseSwipeNoteFragment extends Fragment implements
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 int position = mLayoutManager.findLastVisibleItemPosition();
-                if (!isLoadingMore && hasMore && position + 3 > mList.size()) {
+                if (!isLoadingMore && hasMore && position + 5 > mList.size()) {
                     isLoadingMore = true;
                     loadMoreData(BaseSwipeNoteFragment.this);
                 }
@@ -94,12 +99,18 @@ public abstract class BaseSwipeNoteFragment extends Fragment implements
     @Override
     public void onStart() {
         super.onStart();
+        EventBus.getDefault().register(this);
         // 登录状态改变或者初次加载
         if (App.getUser() != mUser || mList.size() == 0) {
             reLoadData();
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+    }
 
     // -------------------正常帖子列表点击事件回调------------------------------------
     @Override
@@ -129,8 +140,11 @@ public abstract class BaseSwipeNoteFragment extends Fragment implements
         note.setLiked(!note.isLiked());
         int likeCount = note.getLikeCount();
         if (note.isLiked()) {
+            // 添加点赞记录
             note.setLikeCount(likeCount + 1);
             new Like(App.getUserId(), note.getId()).save();
+            // 添加点赞消息
+            new Relation(App.getUserId(), note.getPublisherId(), note.getId(), Relation.TYPE_LIKE).save();
         } else {
             note.setLikeCount(likeCount - 1);
             DataSupport.deleteAll(Like.class, "likerId = ? and belongNoteId = ?", App.getUserId() + "", note.getId() + "");
@@ -159,8 +173,12 @@ public abstract class BaseSwipeNoteFragment extends Fragment implements
         note.setCollected(!note.isCollected());
         int collectCount = note.getCollectCount();
         if (note.isCollected()) {
+            // 添加收藏关系记录
             note.setCollectCount(collectCount + 1);
             new Collection(App.getUserId(), note.getId()).save();
+            // 添加收藏消息
+            new Relation(App.getUserId(), note.getPublisherId(), note.getId(), Relation.TYPE_COLLECT).save();
+            // 提示用户
             Toast.makeText(getActivity(), "收藏成功", Toast.LENGTH_SHORT).show();
         } else {
             note.setCollectCount(collectCount - 1);
@@ -174,37 +192,59 @@ public abstract class BaseSwipeNoteFragment extends Fragment implements
 
     // =========================================================================
 
+    // ============================ 加载数据事件回调 ============================
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLoadDataEvent(LoadDataEvent event) {
+        refreshLayout.setRefreshing(false);
+        switch (event) {
+            case REFRESH_SUCCESS:
+                mAdapter.notifyDataSetChanged();
+                noteListRv.smoothScrollToPosition(0);
+                break;
+            case REFRESH_SUCCESS_EMPTY:
+                Toast.makeText(getContext(), "暂时没有新内容喔", Toast.LENGTH_SHORT).show();
+                break;
+            case REFRESH_FAIL:
+                Toast.makeText(getContext(), "更新失败，请求检查网络或稍后再试", Toast.LENGTH_SHORT).show();
+                break;
+            case LOAD_MORE_SUCCESS:
+            case LOAD_MORE_SUCCESS_EMPTY:
+                mAdapter.notifyDataSetChanged();
+                break;
+            case LOAD_MORE_FAIL:
+                Toast.makeText(getContext(), "加载失败，请求检查网络或稍后再试", Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
+    // =========================================================================
 
     // 下拉刷新事件回调
     @Override
     public void onRefreshCallback(List<Note> result) {
-        refreshLayout.setRefreshing(false);
         if (result == null) {
-            Toast.makeText(getContext(), "更新失败，请求检查网络或稍后再试", Toast.LENGTH_SHORT).show();
+            EventBus.getDefault().post(LoadDataEvent.REFRESH_FAIL);
         } else if (result.size() == 0) {
-            Toast.makeText(getContext(), "暂时没有新内容喔", Toast.LENGTH_SHORT).show();
+            EventBus.getDefault().post(LoadDataEvent.REFRESH_SUCCESS_EMPTY);
         } else {
             mList.addAll(0, result);
-            mAdapter.notifyDataSetChanged();
-            noteListRv.smoothScrollToPosition(0);
+            EventBus.getDefault().post(LoadDataEvent.REFRESH_SUCCESS);
         }
     }
 
     // 上拉加载更多事件回调
     @Override
     public void onLoadMoreCallback(List<Note> result) {
-        refreshLayout.setRefreshing(false);
+        isLoadingMore = false;
         if (result == null) {
-            isLoadingMore = false;
-            Toast.makeText(getContext(), "加载失败，请求检查网络或稍后再试", Toast.LENGTH_SHORT).show();
+            EventBus.getDefault().post(LoadDataEvent.LOAD_MORE_FAIL);
         } else {
             mList.addAll(result);
-            isLoadingMore = false;
-            mAdapter.notifyDataSetChanged();
+            EventBus.getDefault().post(LoadDataEvent.LOAD_MORE_SUCCESS);
             if (result.size() < pageSize) {
                 hasMore = false;
                 mAdapter.setHasMore(hasMore);
-                mAdapter.notifyDataSetChanged();
+                EventBus.getDefault().post(LoadDataEvent.LOAD_MORE_SUCCESS_EMPTY);
             }
         }
     }
@@ -218,20 +258,13 @@ public abstract class BaseSwipeNoteFragment extends Fragment implements
         loadMoreData(this);
     }
 
+
     protected int getFirstItemPublishDate() {
         return (mList != null && mList.size() > 0) ? mList.get(0).getId() : -1;
     }
 
     protected int getLastItemId() {
         return (mList != null && mList.size() > 0) ? mList.get(mList.size() - 1).getId() : Integer.MAX_VALUE;
-    }
-
-    public String getTitle() {
-        return "";
-    }
-
-    public int getModuleId() {
-        return -1;
     }
 
     public abstract void refreshData(SwipeLoadDataCallback<Note> callBack);

@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.linstick.collegeassistant.R;
 import com.linstick.collegeassistant.adapters.listeners.OnNoteListPartialClickListener;
 import com.linstick.collegeassistant.base.BaseSwipeNoteAdapter;
-import com.linstick.collegeassistant.beans.Module;
 import com.linstick.collegeassistant.beans.Note;
 import com.linstick.collegeassistant.utils.TimeFactoryUtil;
 
@@ -60,14 +59,6 @@ public class NoteListAdapter extends BaseSwipeNoteAdapter {
             viewHolder.likeCountTv.setText(note.getLikeCount() + "");
             viewHolder.collectIv.setImageResource(note.isCollected() ? R.drawable.ic_star_orange : R.drawable.ic_star_gray);
             viewHolder.likeIv.setImageResource(note.isLiked() ? R.drawable.ic_like_orange : R.drawable.ic_like_gray);
-
-            // 标题为空的话，隐藏标题
-            if (note.getBelongModule().getId() == Module.MODULE_LIST.length - 1 || note.getTitle().equals("")) {
-                // 校园生活模块隐藏标题，其他活动模块当标题为空时也隐藏
-                viewHolder.noteTitleTv.setVisibility(View.GONE);
-            } else {
-                viewHolder.noteTitleTv.setVisibility(View.VISIBLE);
-            }
 
             // 为点击事件做标记
             viewHolder.collectCountLayout.setTag(position);

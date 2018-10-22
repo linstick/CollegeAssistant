@@ -2,6 +2,7 @@
 <resources>
     <string-array name="belong_module">
         <item>企业宣讲会</item>
+        <item>志愿活动</item>
         <item>社团活动</item>
         <item>高校讲座</item>
         <item>体育活动</item>

@@ -17,6 +17,7 @@ import com.linstick.collegeassistant.beans.Like;
 import com.linstick.collegeassistant.beans.Note;
 import com.linstick.collegeassistant.beans.Relation;
 import com.linstick.collegeassistant.callbacks.SwipeLoadDataCallback;
+import com.linstick.collegeassistant.events.LoadDataEvent;
 import com.linstick.collegeassistant.sqlite.NoteDaoUtil;
 
 import org.litepal.crud.DataSupport;
@@ -34,20 +35,43 @@ public class PersonalNotesSwipeFragment extends BaseSwipeNoteFragment implements
 
     @Override
     public void refreshData(final SwipeLoadDataCallback<Note> callBack) {
-        List<Note> result = NoteDaoUtil.findAfterNotesByUserId(App.getUserId(), getFirstItemPublishDate());
-        callBack.onRefreshCallback(result);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                List<Note> result = NoteDaoUtil.findAfterNotesByUserId(App.getUserId(), getFirstItemPublishDate());
+                callBack.onRefreshCallback(result);
+            }
+        }).start();
+
     }
 
     @Override
-    public void loadMoreData(SwipeLoadDataCallback<Note> callBack) {
-        List<Note> result = NoteDaoUtil.findBeforeNotesByUserId(App.getUserId(), getLastItemId(), pageSize);
-        callBack.onLoadMoreCallback(result);
+    public void loadMoreData(final SwipeLoadDataCallback<Note> callBack) {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                List<Note> result = NoteDaoUtil.findBeforeNotesByUserId(App.getUserId(), getLastItemId(), pageSize);
+                callBack.onLoadMoreCallback(result);
+            }
+        }).start();
+
     }
 
     @Override
-    public void onLoadMoreCallback(List<Note> result) {
-        super.onLoadMoreCallback(result);
-        if (result != null && mList.size() == 0) {
+    public void onLoadDataEvent(LoadDataEvent event) {
+        super.onLoadDataEvent(event);
+        if (mList == null || mList.size() == 0) {
             Toast.makeText(getContext(), "很抱歉，没找到相关数据", Toast.LENGTH_SHORT).show();
         }
     }

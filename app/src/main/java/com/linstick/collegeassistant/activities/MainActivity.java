@@ -25,14 +25,9 @@ import com.linstick.collegeassistant.App;
 import com.linstick.collegeassistant.R;
 import com.linstick.collegeassistant.adapters.ViewPagerAdapter;
 import com.linstick.collegeassistant.base.BaseActivity;
-import com.linstick.collegeassistant.base.BaseSwipeNoteFragment;
-import com.linstick.collegeassistant.fragments.AllNotesSwipeFragment;
-import com.linstick.collegeassistant.fragments.CampusTalkSwipeFragment;
-import com.linstick.collegeassistant.fragments.ClubNoteSwipeFragment;
-import com.linstick.collegeassistant.fragments.LectureNotesSwipeFragment;
-import com.linstick.collegeassistant.fragments.LifeNotesSwipeFragment;
-import com.linstick.collegeassistant.fragments.OtherNoteSwipeFragment;
-import com.linstick.collegeassistant.fragments.SportNoteSwipeFragment;
+import com.linstick.collegeassistant.beans.Module;
+import com.linstick.collegeassistant.fragments.ModuleSwipeNoteFragment;
+import com.linstick.collegeassistant.sqlite.ModuleDaoUtil;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -56,7 +51,8 @@ public class MainActivity extends BaseActivity implements
     @BindView(R.id.view_pager)
     ViewPager viewPager;
 
-    private List<BaseSwipeNoteFragment> mFragmentList;
+    private List<ModuleSwipeNoteFragment> mFragmentList;
+    private List<String> mTitleList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,17 +84,22 @@ public class MainActivity extends BaseActivity implements
 
     private void initFragment() {
         mFragmentList = new ArrayList<>();
-        mFragmentList.add(new AllNotesSwipeFragment());
-        mFragmentList.add(new CampusTalkSwipeFragment());
-        mFragmentList.add(new ClubNoteSwipeFragment());
-        mFragmentList.add(new LectureNotesSwipeFragment());
-        mFragmentList.add(new SportNoteSwipeFragment());
-        mFragmentList.add(new LifeNotesSwipeFragment());
-        mFragmentList.add(new OtherNoteSwipeFragment());
+        mTitleList = new ArrayList<>();
+        mFragmentList.add(new ModuleSwipeNoteFragment());
+        mTitleList.add("全部");
+        List<Module> modules = ModuleDaoUtil.findModules();
+        for (Module module : modules) {
+            ModuleSwipeNoteFragment fragment = new ModuleSwipeNoteFragment();
+            Bundle bundle = new Bundle();
+            bundle.putInt(ModuleSwipeNoteFragment.MODULE_ID, module.getId());
+            fragment.setArguments(bundle);
+            mFragmentList.add(fragment);
+            mTitleList.add(module.getSimpleName());
+        }
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         viewPager.setOffscreenPageLimit(1);
-        viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager(), mFragmentList));
+        viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager(), mFragmentList, mTitleList));
     }
 
     @Override

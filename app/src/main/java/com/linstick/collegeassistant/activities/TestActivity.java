@@ -66,11 +66,12 @@ public class TestActivity extends AppCompatActivity {
         setContentView(R.layout.activity_test);
         ButterKnife.bind(this);
         moduleList.add(new Module(1, "企业宣讲会", "宣讲会"));
-        moduleList.add(new Module(2, "社团活动", "社团"));
-        moduleList.add(new Module(3, "高校讲座", "讲座"));
-        moduleList.add(new Module(4, "体育活动", "体育"));
-        moduleList.add(new Module(5, "校园生活", "校园"));
-        moduleList.add(new Module(6, "其他活动", "其他"));
+        moduleList.add(new Module(2, "志愿活动", "志愿"));
+        moduleList.add(new Module(3, "社团活动", "社团"));
+        moduleList.add(new Module(4, "高校讲座", "讲座"));
+        moduleList.add(new Module(5, "体育活动", "体育"));
+        moduleList.add(new Module(6, "校园生活", "校园"));
+        moduleList.add(new Module(7, "其他活动", "其他"));
     }
 
     private void create() {
@@ -81,37 +82,37 @@ public class TestActivity extends AppCompatActivity {
         insertModuleData();
         insertUserData();
         insertNoteData();
-        insertCommentData();
-        insertCollectionData();
-        insertRelationData();
-        insertLikeData();
+//        insertCommentData();
+//        insertCollectionData();
+//        insertRelationData();
+//        insertLikeData();
     }
 
     private void insertModuleData() {
-       for (Module item : moduleList ){
-           item.save();
-       }
+        for (Module item : moduleList) {
+            item.save();
+        }
     }
 
     private void insertUserData() {
-        new User(R.drawable.icon_08, "Admin", "陆志豪", 26, "华南理工大学", "14级", "计算机学院", "软件工程", "广东省广州市番禺区小谷围街道", "1334456563", "admin", "admin", true, "测试员", TimeFactoryUtil.createBeforeRandomDate()).save();
-        new User(R.drawable.icon_01, "linstick", "罗瑞泳", 23, "广东工业大学", "15级", "计算机学院", "软件工程", "广东省广州市番禺区小谷围街道", "15102032936", "linstick@163.com", "PSC213903", true, "Android应用开发入门Coder", TimeFactoryUtil.createBeforeRandomDate()).save();
-        new User(R.drawable.icon_02, "路人甲", "洛奇", 23, "广东工业大学", "13级", "计算机学院", "网络工程", "广东省广州市番禺区小谷围街道", "1223344545", "lq@163.com", "123456", true, "IOS开发", TimeFactoryUtil.createBeforeRandomDate()).save();
-        new User(R.drawable.icon_03, "路人乙", "罗志杰", 20, "广州大学", "12级", "计算机学院", "计算机科学与技术", "广东省广州市番禺区小谷围街道", "455676342", "lzj@163.com", "123456", true, "全栈工程师", TimeFactoryUtil.createBeforeRandomDate()).save();
-        new User(R.drawable.icon_04, "会飞的猪", "张明超", 30, "广州大学", "17级", "计算机学院", "软件工程", "广东省广州市番禺区小谷围街道", "124574233", "zmc@163.com", "123456", true, "C++游戏开发工程师", TimeFactoryUtil.createBeforeRandomDate()).save();
-        new User(R.drawable.icon_05, "我不会让你知", "李宏毅", 20, "华南理工大学", "14级", "计算机学院", "软件工程", "广东省广州市番禺区小谷围街道", "1743565343", "user1", "user1", false, "Java后台开发工程师", TimeFactoryUtil.createBeforeRandomDate()).save();
-        new User(R.drawable.icon_06, "1", "钟海明", 21, "华南理工大学", "14级", "计算机学院", "软件工程", "广东省广州市番禺区小谷围街道", "1334456563", "user2", "user3", true, "测试员", TimeFactoryUtil.createBeforeRandomDate()).save();
-        new User(R.drawable.icon_07, "不喜欢格子", "李晓红", 23, "华南理工大学", "14级", "计算机学院", "软件工程", "广东省广州市番禺区小谷围街道", "1334456563", "user3", "user3", false, "测试员", TimeFactoryUtil.createBeforeRandomDate()).save();
-        new User(R.drawable.icon_09, "你的输入有误", "林嘉欣", 24, "华南理工大学", "14级", "计算机学院", "软件工程", "广东省广州市番禺区小谷围街道", "1334456563", "user", "user", false, "测试员", TimeFactoryUtil.createBeforeRandomDate()).save();
+        new User(R.drawable.icon_08, "admin", "陆志豪", 26, "华南理工大学", "14级", "计算机学院", "软件工程", "广东省广州市番禺区小谷围街道", "1334456563", "admin", "admin", true, "测试员", TimeFactoryUtil.createBeforeRandomDate()).save();
+        new User(R.drawable.icon_01, "user", "罗瑞泳", 23, "广东工业大学", "15级", "计算机学院", "软件工程", "广东省广州市番禺区小谷围街道", "15102032936", "user", "user", true, "Android应用开发入门Coder", TimeFactoryUtil.createBeforeRandomDate()).save();
+        new User(R.drawable.icon_02, "user1", "洛奇", 23, "广东工业大学", "13级", "计算机学院", "网络工程", "广东省广州市番禺区小谷围街道", "1223344545", "user1", "user1", true, "IOS开发", TimeFactoryUtil.createBeforeRandomDate()).save();
+        new User(R.drawable.icon_03, "user2", "罗志杰", 20, "广州大学", "12级", "计算机学院", "计算机科学与技术", "广东省广州市番禺区小谷围街道", "455676342", "user2", "user2", true, "全栈工程师", TimeFactoryUtil.createBeforeRandomDate()).save();
+        new User(R.drawable.icon_04, "user3", "张明超", 30, "广州大学", "17级", "计算机学院", "软件工程", "广东省广州市番禺区小谷围街道", "124574233", "user3", "user3", true, "C++游戏开发工程师", TimeFactoryUtil.createBeforeRandomDate()).save();
+        new User(R.drawable.icon_05, "user4", "李宏毅", 20, "华南理工大学", "14级", "计算机学院", "软件工程", "广东省广州市番禺区小谷围街道", "1743565343", "user4", "user4", false, "Java后台开发工程师", TimeFactoryUtil.createBeforeRandomDate()).save();
+        new User(R.drawable.icon_06, "user5", "钟海明", 21, "华南理工大学", "14级", "计算机学院", "软件工程", "广东省广州市番禺区小谷围街道", "1334456563", "user5", "user5", true, "测试员", TimeFactoryUtil.createBeforeRandomDate()).save();
+        new User(R.drawable.icon_07, "user6", "李晓红", 23, "华南理工大学", "14级", "计算机学院", "软件工程", "广东省广州市番禺区小谷围街道", "1334456563", "user6", "user6", false, "测试员", TimeFactoryUtil.createBeforeRandomDate()).save();
+        new User(R.drawable.icon_09, "user7", "林嘉欣", 24, "华南理工大学", "14级", "计算机学院", "软件工程", "广东省广州市番禺区小谷围街道", "1334456563", "user7", "user7", false, "测试员", TimeFactoryUtil.createBeforeRandomDate()).save();
     }
 
     private void insertNoteData() {
         int userIndex = 1;
-        TimeFactoryUtil.currentBefore = System.currentTimeMillis() - 1000 * 60 * 60 * 150;
-        TimeFactoryUtil.currentAfter = System.currentTimeMillis() + 1000 * 60 * 60 * 200;
+        TimeFactoryUtil.currentBefore = System.currentTimeMillis() - 1000 * 60 * 60 * 200;
+        TimeFactoryUtil.currentAfter = System.currentTimeMillis() + 1000 * 60 * 60 * 250;
         for (int i = 60; i > 0; i--) {
-            for (int j = 0; j < moduleList.size() ; j++) {
-                new Note(userIndex, j + 1, moduleList.get(j).getName() + "标题" + i, moduleList.get(j).getName() + "测试内容测试内容测试内容测试内容" + i,  TimeFactoryUtil.createBeforeRandomDate(), TimeFactoryUtil.createAfterRandomDate(),"2小时", "广东工业大学(大学城校区) 教5-203",  "带上1支笔和2份简历").save();
+            for (int j = 0; j < moduleList.size(); j++) {
+                new Note(userIndex, j + 1, moduleList.get(j).getName() + "标题" + i, moduleList.get(j).getName() + "这是活动测试内容测试内容测试内容测试内容测试内容测试内容测试内容" + i, TimeFactoryUtil.createBeforeRandomDate(), TimeFactoryUtil.createAfterRandomDate(), "2小时", "广东工业大学(大学城校区) 教5-203", "带上1支笔和2份简历").save();
                 userIndex = (userIndex + 1) % 9 + 1;
             }
         }

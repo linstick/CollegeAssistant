@@ -26,13 +26,13 @@ import com.linstick.collegeassistant.beans.Comment;
 import com.linstick.collegeassistant.beans.Like;
 import com.linstick.collegeassistant.beans.Module;
 import com.linstick.collegeassistant.beans.Note;
+import com.linstick.collegeassistant.beans.Relation;
 import com.linstick.collegeassistant.sqlite.CommentDaoUtil;
 import com.linstick.collegeassistant.sqlite.UserDaoUtil;
 import com.linstick.collegeassistant.utils.TimeFactoryUtil;
 
 import org.litepal.crud.DataSupport;
 
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -129,6 +129,8 @@ public class NoteDetailActivity extends BaseActivity implements OnCommentListCli
                 if (mNote.isCollected()) {
                     mNote.setCollectCount(collectCount + 1);
                     new Collection(App.getUserId(), mNote.getId()).save();
+                    // 添加收藏消息
+                    new Relation(App.getUserId(), mNote.getPublisherId(), mNote.getId(), Relation.TYPE_COLLECT).save();
                     Toast.makeText(NoteDetailActivity.this, "收藏成功", Toast.LENGTH_SHORT).show();
                 } else {
                     mNote.setCollectCount(collectCount - 1);
@@ -147,6 +149,7 @@ public class NoteDetailActivity extends BaseActivity implements OnCommentListCli
                 if (mNote.isLiked()) {
                     mNote.setLikeCount(likeCount + 1);
                     new Like(App.getUserId(), mNote.getId()).save();
+                    new Relation(App.getUserId(), mNote.getPublisherId(), mNote.getId(), Relation.TYPE_LIKE).save();
                 } else {
                     mNote.setLikeCount(likeCount - 1);
                     DataSupport.deleteAll(Like.class, "likerId = ? and belongNoteId = ?", App.getUserId() + "", mNote.getId() + "");
@@ -164,20 +167,19 @@ public class NoteDetailActivity extends BaseActivity implements OnCommentListCli
                     Toast.makeText(NoteDetailActivity.this, "不能发表空评论喔^_^", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Comment comment = new Comment();
-                comment.setContent(content);
-                comment.setBelongNoteId(mNote.getId());
-                comment.setPublisherId(App.getUserId());
-                comment.setPublishTime(new Date());
+                Comment comment = new Comment(App.getUserId(), mNote.getId(), content);
                 comment.setPublisher(UserDaoUtil.findUser(App.getUserId()));
                 comment.save();
+                Relation relation = new Relation(App.getUserId(), mNote.getPublisherId(), mNote.getId(), Relation.TYPE_COMMENT);
+                relation.setContent(content);
+                relation.save();
 
                 mCommentList.add(0, comment);
                 mCommentAdapter.notifyDataSetChanged();
                 mNote.setCommentCount(mNote.getCommentCount() + 1);
                 commentCountTv.setText("评论(" + mNote.getCommentCount() + ")");
                 inputEt.setText("");
-                commentCountTv.clearFocus();
+                inputEt.clearFocus();
                 Toast.makeText(NoteDetailActivity.this, "发表成功", Toast.LENGTH_SHORT).show();
                 break;
         }
